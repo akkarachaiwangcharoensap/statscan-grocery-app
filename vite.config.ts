@@ -16,6 +16,13 @@ export default defineConfig({
         'mstile-150x150.png',
         'safari-pinned-tab.svg'
       ],
+      // Workbox options: increase allowed precache size and exclude huge assets
+      workbox: {
+        // Increase from default 2 MiB to 50 MiB to accommodate larger bundles when needed
+        maximumFileSizeToCacheInBytes: 50 * 1024 * 1024,
+        // Exclude source maps and any very large entry asset patterns from precache
+        globIgnores: ['**/*.map', '**/assets/index-*.js']
+      },
       manifest: {
         name: 'StatsCan Grocery App',
         short_name: 'Grocery',
@@ -47,5 +54,23 @@ export default defineConfig({
   build: {
     outDir: 'build',
     sourcemap: true,
+    // Improve chunking by splitting node_modules into per-package vendor chunks
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes('node_modules')) {
+            const parts = id.split('node_modules/')[1].split('/');
+            let pkg = parts[0];
+            // handle scoped packages like @scope/pkg
+            if (pkg.startsWith('@')) {
+              pkg = `${parts[0]}/${parts[1]}`;
+            }
+            // sanitize package name for chunk name
+            const sanitized = pkg.replace('@', '').replace('/', '.');
+            return `vendor.${sanitized}`;
+          }
+        }
+      }
+    }
   },
 });

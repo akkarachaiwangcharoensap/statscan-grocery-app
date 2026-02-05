@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { GroceryData } from '../types';
-import groceryDataJson from '../data/grocery-data.json';
 
 interface UseGroceryDataResult {
 	data: GroceryData | null;
@@ -20,16 +19,27 @@ export function useGroceryData(): UseGroceryDataResult {
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		try {
-			// Use the imported JSON directly
-			setData(groceryDataJson as GroceryData);
-			setLoading(false);
-		} catch (err: unknown) {
-			if (err instanceof Error) {
-				setError(err.message);
-				setLoading(false);
+		let mounted = true;
+		(async () => {
+			try {
+				const res = await fetch(`${import.meta.env.BASE_URL || '/'}grocery-data.json`);
+				if (!res.ok) throw new Error(`Failed to fetch data: ${res.status}`);
+				const json = (await res.json()) as GroceryData;
+				if (mounted) {
+					setData(json);
+					setLoading(false);
+				}
+			} catch (err: unknown) {
+				if (err instanceof Error && mounted) {
+					setError(err.message);
+					setLoading(false);
+				}
 			}
-		}
+		})();
+
+		return () => {
+			mounted = false;
+		};
 	}, []);
 
 	return { data, loading, error };
