@@ -6,7 +6,8 @@ interface PriceCalculatorProps {
     unit: string;
     currentPrice: number | null;
     onUserPriceChange: (price: string) => void;
-    onCalculate: () => void;
+    // onCalculate now accepts an optional user price string to avoid async state races
+    onCalculate: (price?: string) => void;
     comparisonResult?: ComparisonResult | null;
 }
 
@@ -40,8 +41,10 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
     const handlePriceVolumeCalculate = () => {
         if (productPrice && productVolume) {
             const pricePerUnit = parseFloat(productPrice) / parseFloat(productVolume);
-            onUserPriceChange(pricePerUnit.toFixed(4));
-            onCalculate();
+            const priceStr = pricePerUnit.toFixed(4);
+            // Update parent's user price and pass the computed value directly to onCalculate
+            onUserPriceChange(priceStr);
+            onCalculate(priceStr);
         }
     };
 

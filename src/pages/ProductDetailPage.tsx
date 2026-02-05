@@ -113,11 +113,12 @@ export default function ProductDetailPage(): React.JSX.Element {
 		}
 	}, [getCurrentPrice, selectedDisplayUnit, product]);
 
-	const handleCompare = useCallback(() => {
+	const handleCompare = useCallback((overrideUserPrice?: string) => {
 		const basePrice = displayPrice !== null ? displayPrice : getCurrentPrice();
-		if (!basePrice || !userPrice || !product) return;
+		const userPriceToUse = overrideUserPrice ?? userPrice;
+		if (!basePrice || !userPriceToUse || !product) return;
 
-		const userPriceNum = parseFloat(userPrice);
+		const userPriceNum = parseFloat(userPriceToUse);
 		const difference = userPriceNum - basePrice;
 		const percentageDifference = (difference / basePrice) * 100;
 
