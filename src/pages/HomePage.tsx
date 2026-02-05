@@ -14,7 +14,7 @@ export default function HomePage(): React.JSX.Element {
 				<div className="max-w-2xl mx-auto text-center">
 					{/* Icon */}
 					<div className="inline-flex items-center justify-center w-34 h-34 mb-8 bg-gray-100 rounded-3xl">
-					<img src="/grocery-app-logo.png" alt="statscan-grocery-app logo" className="w-22 h-22 object-contain" />
+					<img src={`${import.meta.env.BASE_URL}grocery-app-logo.png`} alt="statscan-grocery-app logo" className="w-22 h-22 object-contain" />
 				</div>
 				<h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-slate-900 mb-5 leading-tight tracking-tight">
 						Canadian Grocery

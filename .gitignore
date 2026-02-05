@@ -97,3 +97,13 @@ Desktop.ini
 # Playwright / test artifacts
 /test-results/
 /playwright-report/
+
+# Python build/data artifacts
+**/__pycache__/
+*.py[cod]
+
+# Playwright artifacts
+/.playwright/
+
+# Package manager artifact you don't use
+/package-typescript.json
