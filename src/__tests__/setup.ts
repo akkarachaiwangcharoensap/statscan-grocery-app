@@ -20,4 +20,4 @@ Object.defineProperty(window, 'matchMedia', {
 // This allows tests to continue using jest.fn / jest.clearAllMocks etc.
 // Prefer updating tests to use vi.* in the future.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-;(global as any).jest = vi as any;
+(global as any).jest = vi as any;

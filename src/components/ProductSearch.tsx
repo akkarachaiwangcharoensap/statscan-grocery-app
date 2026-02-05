@@ -4,7 +4,7 @@ import { slugify } from '../utils';
 
 interface ProductSearchProps {
 	products?: Product[];
-	onNavigate?: (path: string, opts?: any) => void;
+	onNavigate?: (path: string, opts?: Record<string, unknown>) => void;
 }
 
 /**
@@ -77,7 +77,7 @@ export default function ProductSearch({ products = [] }: ProductSearchProps): Re
 		setIsFocused(false);
 		inputRef.current?.blur();
 
-		const path = `${process.env.PUBLIC_URL || ''}/products/${p.product_category}/${slugify(p.product_name)}`;
+		const path = `${import.meta.env.BASE_URL || ''}products/${p.product_category}/${slugify(p.product_name)}`;
 
 		try {
 			window.history.pushState({}, '', path);

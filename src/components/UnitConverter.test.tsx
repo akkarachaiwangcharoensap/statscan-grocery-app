@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import UnitConverter from './UnitConverter';
+import type { UnitConverterProps } from './UnitConverter';
 
 describe('UnitConverter Component', () => {
 	const defaultProps = {
@@ -41,7 +42,7 @@ describe('UnitConverter Component', () => {
 	});
 
 	test('does not render if unit type is not supported', () => {
-		const props = { baseUnit: 'unsupported', basePrice: 10 } as any;
+		const props = { baseUnit: 'unsupported', basePrice: 10 } as UnitConverterProps;
 		render(<UnitConverter {...props} />);
 		expect(screen.queryByText('Convert Unit')).not.toBeInTheDocument();
 	});

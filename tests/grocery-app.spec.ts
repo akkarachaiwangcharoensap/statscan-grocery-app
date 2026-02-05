@@ -153,7 +153,6 @@ test.describe('Grocery App - Product Navigation', () => {
 			const firstOption = page.getByRole('option').first();
 			await expect(firstOption).toBeVisible({ timeout: 2000 });
 			// Note: clicking might navigate, so we need to handle potential navigation
-			const url = page.url();
 			await firstOption.click();
 			// Wait for navigation or timeout
 			await page.waitForTimeout(500);
@@ -169,6 +168,7 @@ test.describe('Grocery App - Unit Converter', () => {
 
 		await test.step('Verify converter heading exists', async () => {
 			const heading = page.getByText('Convert Unit');
+			await expect(heading).toBeTruthy();
 			// The converter might not be visible if no product is selected
 			// This test verifies the feature exists in the page structure
 		});
@@ -185,6 +185,7 @@ test.describe('Grocery App - Price Calculator', () => {
 			// Price calculator should be on the page
 			// Try to find price-related elements
 			const labels = page.getByText(/Price/i);
+			await expect(labels).toBeTruthy();
 			// If we can find price-related content, the calculator is loaded
 		});
 	});

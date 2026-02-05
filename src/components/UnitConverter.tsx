@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { isWeightUnit, isVolumeUnit, convertPricePerUnit, formatUnit } from '../utils';
 
-interface UnitConverterProps {
+export interface UnitConverterProps {
 	baseUnit: string;
 	basePrice: number;
 	onUnitChange?: (unit: string, convertedPrice: number) => void;
