@@ -40,11 +40,20 @@ img, video {
   height: auto;
 }
 
-/* Make all interactive buttons show a pointer for better affordance */
-button:not(:disabled) {
+/* Make all interactive buttons and button-like controls show a pointer on hover for better affordance */
+button:not(:disabled):hover,
+input[type="button"]:not(:disabled):hover,
+input[type="submit"]:not(:disabled):hover,
+input[type="reset"]:not(:disabled):hover,
+[role="button"]:not([aria-disabled="true"]):hover,
+a[role="button"]:not([aria-disabled="true"]):hover,
+.button:hover,
+.btn:hover,
+.cursor-pointer:hover {
   cursor: pointer;
 }
 
-/* If you'd rather only show on hover, replace with:
-button:not(:disabled):hover { cursor: pointer; }
-*/
+/* Also ensure non-disabled buttons always have pointer for consistency */
+button:not(:disabled) {
+  cursor: pointer;
+}
