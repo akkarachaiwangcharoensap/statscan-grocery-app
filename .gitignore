@@ -1,23 +1,96 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+# -----------------
+# Node / JavaScript
+# -----------------
+/node_modules/
 
-# testing
-/coverage
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# production
-/build
+# Build output
+/build/
+/dist/
+/lib/
+/out/
 
-# misc
-.DS_Store
+# TypeScript cache
+*.tsbuildinfo
+
+# Jest and coverage
+coverage/
+coverage-final.json
+.nyc_output/
+
+# ESLint cache
+.eslintcache
+
+# npm/Yarn/pnpm
+.pnp.*
+.yarn/**
+.yarnrc.yml
+
+# -----------------
+# Environment files
+# -----------------
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*.local
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# -----------------
+# Python
+# -----------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+pip-wheel-metadata/
+
+# Pytest cache
+.pytest_cache/
+
+# -----------------
+# Editors / OS
+# -----------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# -----------------
+# Temporary files
+# -----------------
+*.swp
+*~
+*.tmp
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+
+# Playwright / test artifacts
+/test-results/
+/playwright-report/

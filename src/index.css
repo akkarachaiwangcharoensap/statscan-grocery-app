@@ -5,9 +5,46 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Improve mobile text rendering */
+  text-rendering: optimizeLegibility;
+  /* Prevent font size adjustment on orientation change */
+  -webkit-text-size-adjust: 100%;
+  /* Improve tap highlight */
+  -webkit-tap-highlight-color: rgba(16, 185, 129, 0.1);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Improve touch interactions */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Improve focus visibility for accessibility */
+*:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ensure images and media are responsive */
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make all interactive buttons show a pointer for better affordance */
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* If you'd rather only show on hover, replace with:
+button:not(:disabled):hover { cursor: pointer; }
+*/
