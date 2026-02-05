@@ -15,7 +15,9 @@ export default defineConfig({
   ],
   use: {
     actionTimeout: 0,
-    baseURL: 'http://localhost:3000',
+    // Include Vite base path when running in CI (e.g. GitHub Pages deployed under a subpath)
+    // Vite sets base to '/statscan-grocery-app/' during CI builds, so tests should use the same prefix
+    baseURL: `http://localhost:3000${process.env.GITHUB_ACTIONS ? '/statscan-grocery-app' : ''}`,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
