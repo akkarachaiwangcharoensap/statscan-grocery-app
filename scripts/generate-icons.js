@@ -14,7 +14,12 @@ const targets = [
   { name: 'favicon-32x32.png', size: 32 },
   { name: 'favicon-16x16.png', size: 16 },
   { name: 'android-chrome-192.png', size: 192 },
-  { name: 'android-chrome-512.png', size: 512 }
+  { name: 'android-chrome-512.png', size: 512 },
+  // Microsoft tile images
+  { name: 'mstile-70x70.png', size: { width: 70, height: 70 } },
+  { name: 'mstile-150x150.png', size: { width: 150, height: 150 } },
+  { name: 'mstile-310x310.png', size: { width: 310, height: 310 } },
+  { name: 'mstile-310x150.png', size: { width: 310, height: 150 } }
 ];
 
 async function run() {
@@ -26,8 +31,11 @@ async function run() {
   for (const t of targets) {
     const outPath = path.join(outDir, t.name);
     try {
+      const width = typeof t.size === 'number' ? t.size : t.size.width;
+      const height = typeof t.size === 'number' ? t.size : t.size.height;
+
       await sharp(src)
-        .resize(t.size, t.size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .resize(width, height, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
         .png({ quality: 90 })
         .toFile(outPath);
       console.log(`Generated ${t.name}`);
