@@ -4,7 +4,6 @@ import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
 import CategoryPage from './pages/CategoryPage';
 import ProductDetailPage from './pages/ProductDetailPage';
-import './App.css';
 
 /**
  * Main App component with routing configuration
