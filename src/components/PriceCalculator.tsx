@@ -117,7 +117,7 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
                 <div className="inline-flex rounded-xl bg-slate-200 p-1 w-full">
                     <button
                         onClick={() => setInputMode('per-unit')}
-                        className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all ${
+                        className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all hover:cursor-pointer ${
                             inputMode === 'per-unit'
                                 ? 'bg-white text-slate-900 shadow-sm'
                                 : 'text-slate-600 hover:text-slate-900'
@@ -128,7 +128,7 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
                     </button>
                     <button
                         onClick={() => setInputMode('price-volume')}
-                        className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all ${
+                        className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all hover:cursor-pointer ${
                             inputMode === 'price-volume'
                                 ? 'bg-white text-slate-900 shadow-sm'
                                 : 'text-slate-600 hover:text-slate-900'
@@ -245,7 +245,7 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
             <button
                 onClick={handleCalculateClick}
                 disabled={!canCalculate}
-                className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-semibold text-lg rounded-xl transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed disabled:text-slate-500 flex items-center justify-center gap-2"
+                className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 hover:cursor-pointer active:bg-emerald-700 text-white font-semibold text-lg rounded-xl transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed disabled:text-slate-500 flex items-center justify-center gap-2"
             >
                 {canCalculate ? (
                     <>

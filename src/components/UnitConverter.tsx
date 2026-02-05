@@ -112,7 +112,7 @@ export default function UnitConverter({
 							<label
 								key={unit}
 								htmlFor={id}
-								className={`inline-flex items-center px-4 sm:px-3 py-3 sm:py-2 border rounded-lg cursor-pointer transition-colors min-h-[44px] touch-manipulation ${checked ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white/60 text-slate-900 border-white/80 hover:bg-white/80'}`}>
+								className={`inline-flex items-center px-4 sm:px-3 py-3 sm:py-2 border rounded-lg hover:cursor-pointer transition-colors min-h-[44px] touch-manipulation ${checked ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white/60 text-slate-900 border-white/80 hover:bg-white/80'}`}>
 								<input
 									id={id}
 									name="unit"

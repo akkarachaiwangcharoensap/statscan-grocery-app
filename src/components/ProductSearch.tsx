@@ -170,7 +170,7 @@ role="searchbox"
 					<button
 						type="button"
 						onClick={clearSearch}
-						className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 hover:bg-slate-300 active:bg-slate-400 transition-colors"
+						className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 hover:bg-slate-300 active:bg-slate-400 hover:cursor-pointer transition-colors"
 						aria-label="Clear search"
 					>
 						<i className="fas fa-times text-slate-600 text-sm" aria-hidden="true"></i>
