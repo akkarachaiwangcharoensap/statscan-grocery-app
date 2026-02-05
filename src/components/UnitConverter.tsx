@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { isWeightUnit, isVolumeUnit, convertPricePerUnit, formatUnit } from '../utils';
 
 export interface UnitConverterProps {
@@ -43,6 +43,32 @@ export default function UnitConverter({
 	onUnitChange,
 }: UnitConverterProps): React.JSX.Element {
 	const [selectedUnit, setSelectedUnit] = useState<string>(baseUnit);
+	const didMountRef = useRef(false);
+
+	useEffect(() => {
+		// Keep internal selected unit in sync if parent changes the base unit
+		setSelectedUnit(baseUnit);
+	}, [baseUnit]);
+
+	// Notify parent when base price or base unit changes (but skip the initial mount)
+	useEffect(() => {
+		if (!didMountRef.current) {
+			didMountRef.current = true;
+			return;
+		}
+
+		if (!onUnitChange)
+			return;
+
+		try {
+			const converted = selectedUnit !== baseUnit
+				? convertPricePerUnit(basePrice, baseUnit, selectedUnit)
+				: basePrice;
+			onUnitChange(selectedUnit, converted);
+		} catch (error) {
+			console.error('Unit conversion error on base change:', error);
+		}
+	}, [basePrice, baseUnit]);
 
 	/**
 	 * Determine available unit conversions based on base unit type
@@ -101,33 +127,33 @@ export default function UnitConverter({
 			<h3 className="text-lg sm:text-xl font-light text-slate-900 mb-3 sm:mb-4">Convert Unit</h3>
 
 			<div className="space-y-3 sm:space-y-4">
-{/* Unit selector (radio buttons for better UX and accessibility) */}
-			<div>
-				<p className="block text-sm sm:text-base font-light text-slate-700 mb-2">Select Unit</p>
-				<div role="radiogroup" aria-label="Unit selector" className="flex gap-2 flex-wrap">
-					{availableUnits.map((unit) => {
-						const id = `unit-${unit}`;
-						const checked = selectedUnit === unit;
-						return (
-							<label
-								key={unit}
-								htmlFor={id}
-								className={`inline-flex items-center px-4 sm:px-3 py-3 sm:py-2 border rounded-lg hover:cursor-pointer transition-colors min-h-[44px] touch-manipulation ${checked ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white/60 text-slate-900 border-white/80 hover:bg-white/80'}`}>
-								<input
-									id={id}
-									name="unit"
-									type="radio"
-									value={unit}
-									checked={checked}
-									onChange={() => handleUnitChange(unit)}
-									className="sr-only"
-								/>
+				{/* Unit selector (radio buttons for better UX and accessibility) */}
+				<div>
+					<p className="block text-sm sm:text-base font-light text-slate-700 mb-2">Select Unit</p>
+					<div role="radiogroup" aria-label="Unit selector" className="flex gap-2 flex-wrap">
+						{availableUnits.map((unit) => {
+							const id = `unit-${unit}`;
+							const checked = selectedUnit === unit;
+							return (
+								<label
+									key={unit}
+									htmlFor={id}
+									className={`inline-flex items-center px-4 sm:px-3 py-3 sm:py-2 border rounded-lg hover:cursor-pointer transition-colors min-h-[44px] touch-manipulation ${checked ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white/60 text-slate-900 border-white/80 hover:bg-white/80'}`}>
+									<input
+										id={id}
+										name="unit"
+										type="radio"
+										value={unit}
+										checked={checked}
+										onChange={() => handleUnitChange(unit)}
+										className="sr-only"
+									/>
 									<span className="text-sm sm:text-sm font-light">{formatUnit(unit)}</span>
-							</label>
-						);
-					})}
+								</label>
+							);
+						})}
+					</div>
 				</div>
-			</div>
 
 				{/* Price conversion display */}
 				{selectedUnit !== baseUnit && (

@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ProductSearch from '../components/ProductSearch';
 import UnitConverter from '../components/UnitConverter';
@@ -70,6 +71,48 @@ describe('Integration Tests - Product Search and Price Comparison Flow', () => {
 		const compareButton = screen.getByRole('button', { name: /Compare/i });
 		fireEvent.click(compareButton);
 		expect(onCalculate).toHaveBeenCalled();
+	});
+
+	it('updates PriceCalculator inputs when UnitConverter changes', async () => {
+		// Stateful wrapper to ensure prop updates flow through
+		function Wrapper() {
+			const [unit, setUnit] = React.useState('kg');
+			const [userPrice, setUserPrice] = React.useState('');
+
+			return (
+				<>
+					<UnitConverter
+						baseUnit="kg"
+						basePrice={1}
+						onUnitChange={(u, p) => {
+							setUnit(u);
+							// mirror the same formatting as PriceCalculator's computed value
+							setUserPrice(Number(p).toPrecision(3));
+						}}
+					/>
+					<PriceCalculator
+						userPrice={userPrice}
+						unit={unit}
+						currentPrice={1}
+						onUserPriceChange={setUserPrice}
+						onCalculate={() => {}}
+					/>
+				</>
+			);
+		}
+
+		render(<Wrapper />);
+
+		// Convert unit and assert the price input & label update
+		const lbRadio = screen.getByRole('radio', { name: /LB/i });
+		fireEvent.click(lbRadio);
+
+		// Price per LB label should be present
+		expect(screen.getByLabelText(/Price per LB/i)).toBeInTheDocument();
+
+		// Computed price should be reflected in input value
+		const priceInput = screen.getByLabelText(/Price per LB/i) as HTMLInputElement;
+		expect(priceInput.value).toBe(Number(0.45359237).toPrecision(3));
 	});
 
 	it('handles complete user journey from search to price comparison', async () => {

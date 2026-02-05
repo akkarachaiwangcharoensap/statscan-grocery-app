@@ -70,4 +70,26 @@ describe('UnitConverter Component', () => {
 		expect(callArgs[0]).toBe('lb');
 		expect(callArgs[1]).toBeCloseTo(0.45359237, 4);
 	});
+
+	test('syncs selected unit when baseUnit prop changes', () => {
+		const props = { baseUnit: 'kg', basePrice: 10, onUnitChange: jest.fn() } as any;
+		const { rerender } = render(<UnitConverter {...props} />);
+
+		// initial selection
+		expect(screen.getByRole('radio', { name: /KG/i })).toBeChecked();
+
+		// update prop and expect selection to follow
+		rerender(<UnitConverter {...{ ...props, baseUnit: 'lb' }} />);
+		expect(screen.getByRole('radio', { name: /LB/i })).toBeChecked();
+	});
+
+	test('notifies parent when basePrice changes', () => {
+		const onUnitChange = jest.fn();
+		const { rerender } = render(<UnitConverter baseUnit="kg" basePrice={10} onUnitChange={onUnitChange} />);
+
+		// Change base price — effect should notify parent with updated converted value
+		rerender(<UnitConverter baseUnit="kg" basePrice={20} onUnitChange={onUnitChange} />);
+
+		expect(onUnitChange).toHaveBeenCalledWith('kg', 20);
+	});
 });
