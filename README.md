@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/grocery-app-logo.png" width="128" alt="statscan-grocery-app logo" />
+  <img src="public/grocery-app-logo.png" width="86" alt="statscan-grocery-app logo" />
 </p>
 
 # Canadian Grocery Price Tracker
