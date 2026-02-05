@@ -10,6 +10,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  // Support GitHub Pages deployment with repository subdirectory
+  // Extract the repository name from the environment or use '/' for root deployment
+  base: process.env.GITHUB_ACTIONS ? '/statscan-grocery-app/' : '/',
   server: {
     port: 3000,
     open: true,
