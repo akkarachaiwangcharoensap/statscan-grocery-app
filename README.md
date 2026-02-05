@@ -1,54 +1,61 @@
+<p align="center">
+  <img src="public/logo192.png" width="64" alt="statscan-grocery-app logo" />
+</p>
+
 # Canadian Grocery Price Tracker
 
-A small, accessible React app to explore and compare grocery prices using official Statistics Canada data. Browse categories, search products, and compare your local prices against the national dataset with unit conversion and regional filtering.
+A small, accessible React + TypeScript application to explore and compare grocery prices using official Statistics Canada data. Browse categories, search products, and compare your local prices against national averages with built-in unit conversion and regional filtering.
 
-[Demo →](https://akkarachaiwangcharoensap.github.io/statscan-grocery-app)
+[App](https://akkarachaiwangcharoensap.github.io/statscan-grocery-app)
 
 ---
 
-## Key Features ✅
+## Features
 
-- Browse product categories and see unique product counts
-- Search products with an accessible search UI
-- Compare your price to Statistics Canada averages by year and region
-- Unit conversion (e.g., kg ↔ lb, L ↔ oz) for easy comparison
-- Data produced from a CSV → JSON processor for reproducible datasets
+- Browse product categories and unique product counts
+- Accessible search with typeahead and keyboard navigation
+- Compare local price to StatsCan averages (per unit) with percentage diff
+- Unit conversion utilities (kg ↔ lb, L ↔ oz, etc.)
+- Reproducible dataset: CSV → JSON processor included
 
 > [!note]
-> Data source: Statistics Canada (processed locally with the included script).
+> Data source: Statistics Canada. The repository contains a small Python script to convert the official CSV into the app's JSON dataset.
 
 ---
 
-## Quick start
+## Quick Start
 
-Prerequisites:
+Prerequisites: Node.js (LTS recommended), npm. For data processing: Python 3 and pandas (optional).
 
-- Node.js (LTS recommended) and npm
-- Python 3 and pandas (for data processing, optional)
-
-Install and run locally:
+Clone and install:
 
 ```bash
-npm install
-npm run dev
+git clone <repo-url>
+cd statscan-grocery-app
+npm ci
 ```
 
-Open http://localhost:3000 to view the app.
+Run locally:
 
-**Developer note** 🔧
+```bash
+npm run dev
+# then open http://localhost:3000
+```
 
-- This repo uses the `@` import alias to reference modules inside `src/` (e.g. `@/components/ProductSearch`). The alias is mapped in `tsconfig.json` (`"@/*": ["src/*"]`) and resolved at build time via Vite.
-- Scripts have been updated for Vite and Vitest; common commands are `npm run dev`, `npm run build`, `npm run test:run` and `npm run test:coverage`. See `package.json` for the full list.
+Build for production:
 
+```bash
+npm run build
+```
 
 ---
 
-## Processing the Statistics Canada data
+## Data Processing
 
-This repo includes a small Python utility to convert the original CSV to the JSON used by the app.
+To regenerate the `public/data/grocery-data.json` from the raw CSV:
 
 ```bash
-# create a Python venv (optional)
+# (optional) create/activate Python venv
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
@@ -57,72 +64,65 @@ python process_statscan_to_json.py data/statscan-full.csv public/data/grocery-da
 ```
 
 > [!note]
-> The app reads `public/data/grocery-data.json` at runtime — regenerate it if you need newer data or custom CSV files.
+> The app loads `public/data/grocery-data.json` at runtime — regenerate it if you update the CSV.
 
 ---
 
-## Build & deploy
+## Tests & Quality
 
-This project is configured to deploy to GitHub Pages.
-
-```bash
-npm run build
-npm run deploy
-```
-
-(Deploy uses `gh-pages` and the `homepage` value in package metadata.)
-
----
-
-## Tests
-
-Run unit tests using Vitest:
+Unit tests (Vitest):
 
 ```bash
-# Run in watch mode (default)
+# Run in watch
 npm run test
-# Run headless once
+# Run once (headless)
 npm run test:run
-# Open the Vitest UI
-npm run test:ui
-# Generate coverage report
+# Coverage
 npm run test:coverage
 ```
 
-There are unit tests for utility functions (e.g., unit conversion) and component tests.
+End-to-end tests (Playwright):
+
+```bash
+# Install browsers and run E2E
+npx playwright install --with-deps
+npm run e2e
+```
+
+Lint and type check:
+
+```bash
+npm run lint
+npm run type-check
+```
+
+---
+
+## CI / CD
+
+This repository includes GitHub Actions workflows that run linting, type checks, unit tests, builds, and E2E tests. A deployment workflow publishes the `build/` output to GitHub Pages when changes are pushed to `main`.
 
 > [!note]
-> Playwright-style test guidance is included in `.github/instructions/playwright-typescript.instructions.md` — follow those conventions when adding end-to-end tests.
+> The Vite `base` is configured to deploy to `https://<user>.github.io/statscan-grocery-app/` when running in GitHub Actions (see `vite.config.ts`).
 
 ---
 
-## Project structure (high level)
+## Project Structure (high level)
 
-- `public/` – static assets and `public/data/grocery-data.json`
-- `src/` – React app
-  - `pages/` – route pages (Home, Products, Product detail)
-  - `components/` – UI components and helpers
-  - `hooks/` – data fetching and shared hooks
-  - `utils/` – conversion, formatting, and helper utilities
-- `process_statscan_to_json.py` – CSV → JSON processor (pandas)
-- `requirements.txt` – Python dependencies for data processing
+- `public/` — static assets and `public/data/grocery-data.json`
+- `src/` — React app (components, pages, hooks, utils)
+- `tests/` — Playwright E2E tests
+- `process_statscan_to_json.py` — CSV → JSON conversion
 
 ---
 
-## Contributing & Notes
+## Contributing
 
-Contributions are welcome: open issues or PRs for bug fixes, improvements, or updated datasets. Keep changes small and include tests where appropriate.
-
-> [!warning]
-> This project uses Statistics Canada data. Make sure you understand and comply with the dataset's terms if you redistribute processed data.
+Contributions are welcome. Open an issue or a pull request and include tests for new behavior. Keep changes small and focused.
 
 ---
 
 ## Acknowledgements
 
-- Statistics Canada — original grocery price CSV data
-- Built with React + TypeScript
-
----
-
-If you'd like, I can also add a short developer guide with common debug workflows, test examples, or CI deploy hints. Let me know which you'd prefer next. ✨
+- Statistics Canada — source data
+- Built with Vite, React, TypeScript, Vitest, and Playwright
