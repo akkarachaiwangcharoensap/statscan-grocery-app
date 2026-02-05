@@ -72,7 +72,7 @@ describe('UnitConverter Component', () => {
 	});
 
 	test('syncs selected unit when baseUnit prop changes', () => {
-		const props = { baseUnit: 'kg', basePrice: 10, onUnitChange: jest.fn() } as any;
+		const props: UnitConverterProps = { baseUnit: 'kg', basePrice: 10, onUnitChange: jest.fn() };
 		const { rerender } = render(<UnitConverter {...props} />);
 
 		// initial selection

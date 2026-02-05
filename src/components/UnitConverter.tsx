@@ -51,14 +51,22 @@ export default function UnitConverter({
 	}, [baseUnit]);
 
 	// Notify parent when base price or base unit changes (but skip the initial mount)
+	const prevBaseRef = useRef({ basePrice, baseUnit });
 	useEffect(() => {
 		if (!didMountRef.current) {
 			didMountRef.current = true;
+			prevBaseRef.current = { basePrice, baseUnit };
 			return;
 		}
 
-		if (!onUnitChange)
+		// Only react to actual changes in basePrice/baseUnit to avoid duplicate notifications
+		if (prevBaseRef.current.basePrice === basePrice && prevBaseRef.current.baseUnit === baseUnit) {
 			return;
+		}
+
+		prevBaseRef.current = { basePrice, baseUnit };
+
+		if (!onUnitChange) return;
 
 		try {
 			const converted = selectedUnit !== baseUnit
@@ -68,7 +76,7 @@ export default function UnitConverter({
 		} catch (error) {
 			console.error('Unit conversion error on base change:', error);
 		}
-	}, [basePrice, baseUnit]);
+	}, [basePrice, baseUnit, onUnitChange, selectedUnit]);
 
 	/**
 	 * Determine available unit conversions based on base unit type
