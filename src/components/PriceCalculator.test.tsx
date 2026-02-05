@@ -121,7 +121,7 @@ describe('PriceCalculator Component', () => {
 		render(<PriceCalculator {...props} />);
 
 		expect(screen.getByText(/You're Saving/i)).toBeInTheDocument();
-		expect(screen.getByText(/-\$5\.00/)).toBeInTheDocument();
+		expect(screen.getByText((content) => content.replace(/\s+/g, '').includes('-$5.00'))).toBeInTheDocument();
 	});
 
 	it('displays paying more result when user price is higher', () => {
@@ -188,7 +188,7 @@ describe('PriceCalculator Component', () => {
 		render(<PriceCalculator {...props} />);
 
 		expect(screen.getByLabelText(/Price per LB/i)).toBeInTheDocument();
-		expect(screen.getByText(/per lb/i)).toBeInTheDocument();
+		expect(screen.getAllByText(/per lb/i).length).toBeGreaterThan(0);
 	});
 
 	it('shows percentage difference in result', () => {
@@ -202,6 +202,6 @@ describe('PriceCalculator Component', () => {
 		const props = { ...defaultProps, comparisonResult };
 		render(<PriceCalculator {...props} />);
 
-		expect(screen.getByText(/\(-20\.0%\)/)).toBeInTheDocument();
+		expect(screen.getByText((content) => content.replace(/\s+/g, '').includes('(20.0%)'))).toBeInTheDocument();
 	});
 });

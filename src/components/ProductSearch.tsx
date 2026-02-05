@@ -36,7 +36,9 @@ export default function ProductSearch({ products = [] }: ProductSearchProps): Re
 				.slice(0, 8);
 
 			setResults(matches);
-			setOpen(matches.length > 0);
+		// Show dropdown area whenever there is a non-empty query. The render
+		// will decide whether to show the result list or a "no results" message
+		setOpen(!!q);
 			setActiveIndex(-1);
 		}, 180);
 
@@ -155,12 +157,12 @@ export default function ProductSearch({ products = [] }: ProductSearchProps): Re
 					? 'border-emerald-500 bg-white'
 					: 'border-transparent'
 					} focus:outline-none`}
-				role="combobox"
+role="searchbox"
 				aria-label="Search products"
 				aria-autocomplete="list"
 				aria-controls="product-search-list"
 				aria-haspopup="listbox"
-				aria-expanded={open}
+
 			/>
 
 				{/* Clear Button */}

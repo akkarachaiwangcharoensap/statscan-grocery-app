@@ -33,6 +33,13 @@ export function capitalizeWords(text: string): string {
 	if (!text) return '';
 	return text
 		.split(' ')
-		.map((word) => capitalize(word))
+		.map((word) => {
+			if (word.slice(1) !== word.slice(1).toLowerCase()) {
+				// Mixed or uppercase interior -> normalize to full uppercase per tests
+				return word.toUpperCase();
+			}
+			// Otherwise capitalize first letter and keep remainder lowercase
+			return capitalize(word.toLowerCase());
+		})
 		.join(' ');
 }

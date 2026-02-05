@@ -34,7 +34,7 @@ export default function PriceCalculator({
         ? Boolean(userPrice) && currentPrice !== null
         : Boolean(productPrice) && Boolean(productVolume) && currentPrice !== null;
     
-    const isSame = comparisonResult ? comparisonResult.difference < 0.01 : false;
+const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 : false;
 
     // Calculate price per unit when in price-volume mode
     const handlePriceVolumeCalculate = () => {
@@ -99,7 +99,7 @@ export default function PriceCalculator({
                     <div className="flex items-baseline justify-center gap-2 mt-2">
                         <span className={`text-3xl font-bold ${comparisonResult.isSaving ? 'text-emerald-700' : 'text-red-700'
                             }`}>
-                            {comparisonResult.isSaving ? '-' : '+'}${comparisonResult.difference.toFixed(2)}
+                            {comparisonResult.isSaving ? '-' : '+'}${Math.abs(comparisonResult.difference).toFixed(2)}
                         </span>
                         <span className={`text-lg font-medium ${comparisonResult.isSaving ? 'text-emerald-600' : 'text-red-600'
                             }`}>

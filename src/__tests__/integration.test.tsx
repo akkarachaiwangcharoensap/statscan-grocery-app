@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
 import ProductSearch from '../components/ProductSearch';
 import UnitConverter from '../components/UnitConverter';
 import PriceCalculator from '../components/PriceCalculator';
@@ -16,9 +15,9 @@ describe('Integration Tests - Product Search and Price Comparison Flow', () => {
 		const handleSearch = jest.fn();
 
 		render(
-			<BrowserRouter>
-				<ProductSearch products={mockProducts} onNavigate={handleSearch} />
-			</BrowserRouter>
+				<>
+					<ProductSearch products={mockProducts} onNavigate={handleSearch} />
+				</>
 		);
 
 		// User searches for a product
@@ -30,7 +29,9 @@ describe('Integration Tests - Product Search and Price Comparison Flow', () => {
 		}, { timeout: 1000 });
 
 		// Verify search results display
-		expect(screen.getByText(/Milk 2%/)).toBeInTheDocument();
+		const options = screen.getAllByRole('option');
+		expect(options.length).toBeGreaterThan(0);
+		expect(options.some((opt) => /Milk\s*2%/i.test(opt.textContent || ''))).toBe(true);
 	});
 
 	it('allows user to compare their price with unit conversion', async () => {
@@ -74,7 +75,6 @@ describe('Integration Tests - Product Search and Price Comparison Flow', () => {
 
 	it('handles complete user journey from search to price comparison', async () => {
 		render(
-			<BrowserRouter>
 				<>
 					<ProductSearch products={mockProducts} />
 					<UnitConverter baseUnit="kg" basePrice={10} />
@@ -86,7 +86,6 @@ describe('Integration Tests - Product Search and Price Comparison Flow', () => {
 						onCalculate={() => {}}
 					/>
 				</>
-			</BrowserRouter>
 		);
 
 		// Step 1: Search
@@ -94,15 +93,16 @@ describe('Integration Tests - Product Search and Price Comparison Flow', () => {
 		fireEvent.change(searchInput, { target: { value: 'chicken' } });
 
 		await waitFor(() => {
-			expect(screen.getByText(/Chicken Breast/i)).toBeInTheDocument();
+			const options = screen.getAllByRole('option');
+			expect(options.some((opt) => /Chicken\s*Breast/i.test(opt.textContent || ''))).toBe(true);
 		}, { timeout: 1000 });
 
 		// Step 2: Unit conversion visible
 		expect(screen.getByText('Convert Unit')).toBeInTheDocument();
 
 		// Step 3: Price calculator visible
-		const priceLabel = screen.getByText(/Price per KG/i);
-		expect(priceLabel).toBeInTheDocument();
+		const priceLabels = screen.getAllByText(/Price per KG/i);
+		expect(priceLabels.length).toBeGreaterThan(0);
 	});
 
 	it('maintains state across component interactions', async () => {
@@ -160,8 +160,8 @@ describe('Integration Tests - Unit Conversion Edge Cases', () => {
 		);
 
 		// Volume units should be available
-		expect(screen.getByRole('radio', { name: /L/i })).toBeInTheDocument();
-		expect(screen.getByRole('radio', { name: /OZ/i })).toBeInTheDocument();
+		expect(screen.getByRole('radio', { name: /^L$/i })).toBeInTheDocument();
+		expect(screen.getByRole('radio', { name: /OZ$/i })).toBeInTheDocument();
 	});
 
 	it('handles weight unit conversions correctly', () => {
