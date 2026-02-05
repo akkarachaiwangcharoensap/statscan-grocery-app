@@ -55,8 +55,17 @@ test.describe('Grocery App - Products Page Navigation', () => {
 });
 
 test.describe('Grocery App - Product Search', () => {
+	// Navigate from home page before each test instead of direct goto
 	test.beforeEach(async ({ page }) => {
-		await page.goto('/products');
+		// Start at home page
+		await page.goto('/');
+
+		// Click to navigate to products page (avoids 404 on GitHub Pages)
+		const browseButton = page.getByRole('link', { name: /Browse Products/i });
+		await browseButton.click();
+
+		// Wait for products page to load
+		await expect(page).toHaveURL(/\/products/);
 	});
 
 	test('displays search input', async ({ page }) => {
@@ -139,8 +148,14 @@ test.describe('Grocery App - Product Search', () => {
 
 test.describe('Grocery App - Product Navigation', () => {
 	test('navigates to product detail page from search', async ({ page }) => {
-		await test.step('Go to products page', async () => {
-			await page.goto('/products');
+		await test.step('Start at home page', async () => {
+			await page.goto('/');
+		});
+
+		await test.step('Navigate to products page', async () => {
+			const browseButton = page.getByRole('link', { name: /Browse Products/i });
+			await browseButton.click();
+			await expect(page).toHaveURL(/\/products/);
 		});
 
 		await test.step('Search for a product', async () => {
@@ -162,8 +177,14 @@ test.describe('Grocery App - Product Navigation', () => {
 
 test.describe('Grocery App - Unit Converter', () => {
 	test('displays unit converter on product page', async ({ page }) => {
+		await test.step('Start at home page', async () => {
+			await page.goto('/');
+		});
+
 		await test.step('Navigate to products page', async () => {
-			await page.goto('/products');
+			const browseButton = page.getByRole('link', { name: /Browse Products/i });
+			await browseButton.click();
+			await expect(page).toHaveURL(/\/products/);
 		});
 
 		await test.step('Verify converter heading exists', async () => {
@@ -177,8 +198,14 @@ test.describe('Grocery App - Unit Converter', () => {
 
 test.describe('Grocery App - Price Calculator', () => {
 	test('displays price calculator component', async ({ page }) => {
+		await test.step('Start at home page', async () => {
+			await page.goto('/');
+		});
+
 		await test.step('Navigate to products page', async () => {
-			await page.goto('/products');
+			const browseButton = page.getByRole('link', { name: /Browse Products/i });
+			await browseButton.click();
+			await expect(page).toHaveURL(/\/products/);
 		});
 
 		await test.step('Look for price input label', async () => {
@@ -192,11 +219,20 @@ test.describe('Grocery App - Price Calculator', () => {
 });
 
 test.describe('Grocery App - Accessibility', () => {
-	test('has proper ARIA attributes for search', async ({ page }) => {
-		await test.step('Navigate to products', async () => {
-			await page.goto('/products');
-		});
+	// Navigate from home before each accessibility test
+	test.beforeEach(async ({ page }) => {
+		// Start at home page
+		await page.goto('/');
 
+		// Click to navigate to products page
+		const browseButton = page.getByRole('link', { name: /Browse Products/i });
+		await browseButton.click();
+
+		// Wait for products page to load
+		await expect(page).toHaveURL(/\/products/);
+	});
+
+	test('has proper ARIA attributes for search', async ({ page }) => {
 		await test.step('Check search accessibility', async () => {
 			const searchInput = page.getByRole('searchbox');
 			await expect(searchInput).toHaveAttribute('aria-autocomplete', 'list');
@@ -206,10 +242,6 @@ test.describe('Grocery App - Accessibility', () => {
 	});
 
 	test('displays and labels form inputs correctly', async ({ page }) => {
-		await test.step('Navigate to products', async () => {
-			await page.goto('/products');
-		});
-
 		await test.step('Verify form has accessible labels', async () => {
 			const searchbox = page.getByRole('searchbox');
 			await expect(searchbox).toBeVisible();
@@ -217,10 +249,6 @@ test.describe('Grocery App - Accessibility', () => {
 	});
 
 	test('keyboard navigation works properly', async ({ page }) => {
-		await test.step('Navigate to products', async () => {
-			await page.goto('/products');
-		});
-
 		await test.step('Tab through page elements', async () => {
 			const searchbox = page.getByRole('searchbox');
 			// Focus on search box
