@@ -126,8 +126,8 @@ describe('PriceCalculator Component', () => {
 		const button = screen.getByRole('button', { name: /Compare/i });
 		fireEvent.click(button);
 
-		expect(onUserPriceChange).toHaveBeenCalledWith('5.0000');
-		expect(onCalculate).toHaveBeenCalledWith('5.0000');
+		expect(onUserPriceChange).toHaveBeenCalledWith('5.00');
+		expect(onCalculate).toHaveBeenCalledWith('5.00');
 	});
 
 	it('displays saving result when user price is lower', () => {

@@ -41,7 +41,8 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
     const handlePriceVolumeCalculate = () => {
         if (productPrice && productVolume) {
             const pricePerUnit = parseFloat(productPrice) / parseFloat(productVolume);
-            const priceStr = pricePerUnit.toFixed(4);
+            // Keep up to 3 significant figures for consistency
+            const priceStr = Number(pricePerUnit).toPrecision(3);
             // Update parent's user price and pass the computed value directly to onCalculate
             onUserPriceChange(priceStr);
             onCalculate(priceStr);
@@ -229,18 +230,22 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
                     </div>
 
                     {/* Calculated Preview */}
-                    {productPrice && productVolume && parseFloat(productVolume) > 0 && (
-                        <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
-                            <p className="text-xs font-semibold text-emerald-700 mb-1">
-                                <i className="fas fa-calculator mr-1" aria-hidden="true"></i>
-                                Calculated Price per {unit.toUpperCase()}
-                            </p>
-                            <p className="text-2xl font-bold text-emerald-900">
-                                ${(parseFloat(productPrice) / parseFloat(productVolume)).toFixed(2)}
-                                <span className="text-sm font-medium text-emerald-600 ml-2">per {unit}</span>
-                            </p>
-                        </div>
-                    )}
+                    {productPrice && productVolume && parseFloat(productVolume) > 0 && (() => {
+                        const computed = parseFloat(productPrice) / parseFloat(productVolume);
+                        const preview = Number(computed).toPrecision(3);
+                        return (
+                            <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
+                                <p className="text-xs font-semibold text-emerald-700 mb-1">
+                                    <i className="fas fa-calculator mr-1" aria-hidden="true"></i>
+                                    Calculated Price per {unit.toUpperCase()}
+                                </p>
+                                <p className="text-2xl font-bold text-emerald-900">
+                                    ${preview}
+                                    <span className="text-sm font-medium text-emerald-600 ml-2">per {unit}</span>
+                                </p>
+                            </div>
+                        );
+                    })()}
                 </div>
             )}
 
