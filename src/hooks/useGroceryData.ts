@@ -19,8 +19,9 @@ export function useGroceryData(): UseGroceryDataResult {
 
 	useEffect(() => {
 		const controller = new AbortController();
+		const dataUrl = new URL('data/grocery-data.json', import.meta.env.BASE_URL).toString();
 
-		fetch('/data/grocery-data.json', {
+		fetch(dataUrl, {
 			signal: controller.signal,
 		})
 			.then((response) => {
