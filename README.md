@@ -30,15 +30,15 @@ Install and run locally:
 
 ```bash
 npm install
-npm start
+npm run dev
 ```
 
 Open http://localhost:3000 to view the app.
 
 **Developer note** 🔧
 
-- This repo uses the `@` import alias to reference modules inside `src/` (e.g. `@/components/ProductSearch`). The alias is mapped in `tsconfig.json` (`"@/*": ["src/*"]`) and resolved at build time via `craco` (see `craco.config.js`).
-- Scripts were updated to use `craco` (e.g. `npm start` now runs `craco start`). You can continue using the same commands (`npm start`, `npm test`, `npm run build`).
+- This repo uses the `@` import alias to reference modules inside `src/` (e.g. `@/components/ProductSearch`). The alias is mapped in `tsconfig.json` (`"@/*": ["src/*"]`) and resolved at build time via Vite.
+- Scripts have been updated for Vite and Vitest; common commands are `npm run dev`, `npm run build`, `npm run test:run` and `npm run test:coverage`. See `package.json` for the full list.
 
 
 ---
@@ -76,10 +76,17 @@ npm run deploy
 
 ## Tests
 
-Run unit tests using the built-in test runner:
+Run unit tests using Vitest:
 
 ```bash
-npm test
+# Run in watch mode (default)
+npm run test
+# Run headless once
+npm run test:run
+# Open the Vitest UI
+npm run test:ui
+# Generate coverage report
+npm run test:coverage
 ```
 
 There are unit tests for utility functions (e.g., unit conversion) and component tests.

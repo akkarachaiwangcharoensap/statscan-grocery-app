@@ -12,7 +12,7 @@ import './App.css';
  */
 function App(): React.JSX.Element {
 	return (
-		<Router basename={process.env.PUBLIC_URL}>
+		<Router basename={import.meta.env.BASE_URL || '/'}>
 			<Routes>
 				<Route path="/" element={<HomePage />} />
 				<Route path="/products" element={<ProductsPage />} />

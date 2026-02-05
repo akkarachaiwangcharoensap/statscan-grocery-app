@@ -16,6 +16,9 @@ yarn-error.log*
 /lib/
 /out/
 
+# Local dev files
+*.local
+
 # TypeScript cache
 *.tsbuildinfo
 

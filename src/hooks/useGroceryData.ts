@@ -20,7 +20,7 @@ export function useGroceryData(): UseGroceryDataResult {
 	useEffect(() => {
 		const controller = new AbortController();
 
-		fetch(`${process.env.PUBLIC_URL}/data/grocery-data.json`, {
+		fetch('/data/grocery-data.json', {
 			signal: controller.signal,
 		})
 			.then((response) => {
