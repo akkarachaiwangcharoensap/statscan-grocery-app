@@ -13,11 +13,10 @@ export default function HomePage(): React.JSX.Element {
 			<div className="container mx-auto px-4 pt-16 pb-12 sm:pt-24 sm:pb-16">
 				<div className="max-w-2xl mx-auto text-center">
 					{/* Icon */}
-					<div className="inline-flex items-center justify-center w-20 h-20 mb-8 bg-emerald-500 rounded-3xl">
-						<i className="fas fa-shopping-cart text-4xl text-white" aria-hidden="true"></i>
-					</div>
-
-					<h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-slate-900 mb-5 leading-tight tracking-tight">
+					<div className="inline-flex items-center justify-center w-34 h-34 mb-8 bg-gray-100 rounded-3xl">
+					<img src="/grocery-app-logo.png" alt="statscan-grocery-app logo" className="w-22 h-22 object-contain" />
+				</div>
+				<h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-slate-900 mb-5 leading-tight tracking-tight">
 						Canadian Grocery
 						<br />
 						Price Tracker
