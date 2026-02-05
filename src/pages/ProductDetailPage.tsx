@@ -113,11 +113,12 @@ export default function ProductDetailPage(): React.JSX.Element {
 		}
 	}, [getCurrentPrice, selectedDisplayUnit, product]);
 
-	const handleCompare = useCallback(() => {
+	const handleCompare = useCallback((overrideUserPrice?: string) => {
 		const basePrice = displayPrice !== null ? displayPrice : getCurrentPrice();
-		if (!basePrice || !userPrice || !product) return;
+		const userPriceToUse = overrideUserPrice ?? userPrice;
+		if (!basePrice || !userPriceToUse || !product) return;
 
-		const userPriceNum = parseFloat(userPrice);
+		const userPriceNum = parseFloat(userPriceToUse);
 		const difference = userPriceNum - basePrice;
 		const percentageDifference = (difference / basePrice) * 100;
 
@@ -215,7 +216,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 												console.error('Conversion error', err);
 											}
 										}}
-										className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'kg'
+										className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'kg'
 												? 'bg-emerald-500 text-white'
 												: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
 											}`}
@@ -242,7 +243,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 												console.error('Conversion error', err);
 											}
 										}}
-										className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'lb'
+										className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'lb'
 												? 'bg-emerald-500 text-white'
 												: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
 											}`}
@@ -274,7 +275,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 										console.error('Conversion error', err);
 									}
 								}}
-								className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'l'
+								className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'l'
 									? 'bg-emerald-500 text-white'
 									: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
 								}`}
@@ -301,7 +302,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 										console.error('Conversion error', err);
 									}
 								}}
-								className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'oz'
+								className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'oz'
 									? 'bg-emerald-500 text-white'
 									: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
 								}`}

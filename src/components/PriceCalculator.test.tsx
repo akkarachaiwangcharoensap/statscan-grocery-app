@@ -108,6 +108,28 @@ describe('PriceCalculator Component', () => {
 		});
 	});
 
+	it('calls onCalculate with computed price in price-volume mode when Compare is clicked', async () => {
+		const onUserPriceChange = jest.fn();
+		const onCalculate = jest.fn();
+		const props = { ...defaultProps, onUserPriceChange, onCalculate };
+		render(<PriceCalculator {...props} />);
+
+		const priceVolButton = screen.getByRole('button', { name: /Price \+ Volume/i });
+		fireEvent.click(priceVolButton);
+
+		const priceInput = screen.getByLabelText(/Product Price/i);
+		const volumeInput = screen.getByLabelText(/Volume \/ Weight/i);
+
+		fireEvent.change(priceInput, { target: { value: '10' } });
+		fireEvent.change(volumeInput, { target: { value: '2' } });
+
+		const button = screen.getByRole('button', { name: /Compare/i });
+		fireEvent.click(button);
+
+		expect(onUserPriceChange).toHaveBeenCalledWith('5.00');
+		expect(onCalculate).toHaveBeenCalledWith('5.00');
+	});
+
 	it('displays saving result when user price is lower', () => {
 		const comparisonResult = createMockComparisonResult({
 			userPrice: 5,

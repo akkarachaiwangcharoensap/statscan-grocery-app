@@ -40,20 +40,4 @@ img, video {
   height: auto;
 }
 
-/* Make all interactive buttons and button-like controls show a pointer on hover for better affordance */
-button:not(:disabled):hover,
-input[type="button"]:not(:disabled):hover,
-input[type="submit"]:not(:disabled):hover,
-input[type="reset"]:not(:disabled):hover,
-[role="button"]:not([aria-disabled="true"]):hover,
-a[role="button"]:not([aria-disabled="true"]):hover,
-.button:hover,
-.btn:hover,
-.cursor-pointer:hover {
-  cursor: pointer;
-}
-
-/* Also ensure non-disabled buttons always have pointer for consistency */
-button:not(:disabled) {
-  cursor: pointer;
-}
+/* Cursor behavior is handled by Tailwind utility classes (e.g. `hover:cursor-pointer`, `cursor-not-allowed` for disabled). */

@@ -6,7 +6,8 @@ interface PriceCalculatorProps {
     unit: string;
     currentPrice: number | null;
     onUserPriceChange: (price: string) => void;
-    onCalculate: () => void;
+    // onCalculate now accepts an optional user price string to avoid async state races
+    onCalculate: (price?: string) => void;
     comparisonResult?: ComparisonResult | null;
 }
 
@@ -40,8 +41,11 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
     const handlePriceVolumeCalculate = () => {
         if (productPrice && productVolume) {
             const pricePerUnit = parseFloat(productPrice) / parseFloat(productVolume);
-            onUserPriceChange(pricePerUnit.toFixed(4));
-            onCalculate();
+            // Keep up to 3 significant figures for consistency
+            const priceStr = Number(pricePerUnit).toPrecision(3);
+            // Update parent's user price and pass the computed value directly to onCalculate
+            onUserPriceChange(priceStr);
+            onCalculate(priceStr);
         }
     };
 
@@ -117,7 +121,7 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
                 <div className="inline-flex rounded-xl bg-slate-200 p-1 w-full">
                     <button
                         onClick={() => setInputMode('per-unit')}
-                        className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all ${
+                        className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all hover:cursor-pointer ${
                             inputMode === 'per-unit'
                                 ? 'bg-white text-slate-900 shadow-sm'
                                 : 'text-slate-600 hover:text-slate-900'
@@ -128,7 +132,7 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
                     </button>
                     <button
                         onClick={() => setInputMode('price-volume')}
-                        className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all ${
+                        className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all hover:cursor-pointer ${
                             inputMode === 'price-volume'
                                 ? 'bg-white text-slate-900 shadow-sm'
                                 : 'text-slate-600 hover:text-slate-900'
@@ -226,18 +230,22 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
                     </div>
 
                     {/* Calculated Preview */}
-                    {productPrice && productVolume && parseFloat(productVolume) > 0 && (
-                        <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
-                            <p className="text-xs font-semibold text-emerald-700 mb-1">
-                                <i className="fas fa-calculator mr-1" aria-hidden="true"></i>
-                                Calculated Price per {unit.toUpperCase()}
-                            </p>
-                            <p className="text-2xl font-bold text-emerald-900">
-                                ${(parseFloat(productPrice) / parseFloat(productVolume)).toFixed(2)}
-                                <span className="text-sm font-medium text-emerald-600 ml-2">per {unit}</span>
-                            </p>
-                        </div>
-                    )}
+                    {productPrice && productVolume && parseFloat(productVolume) > 0 && (() => {
+                        const computed = parseFloat(productPrice) / parseFloat(productVolume);
+                        const preview = Number(computed).toPrecision(3);
+                        return (
+                            <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
+                                <p className="text-xs font-semibold text-emerald-700 mb-1">
+                                    <i className="fas fa-calculator mr-1" aria-hidden="true"></i>
+                                    Calculated Price per {unit.toUpperCase()}
+                                </p>
+                                <p className="text-2xl font-bold text-emerald-900">
+                                    ${preview}
+                                    <span className="text-sm font-medium text-emerald-600 ml-2">per {unit}</span>
+                                </p>
+                            </div>
+                        );
+                    })()}
                 </div>
             )}
 
@@ -245,7 +253,7 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
             <button
                 onClick={handleCalculateClick}
                 disabled={!canCalculate}
-                className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-semibold text-lg rounded-xl transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed disabled:text-slate-500 flex items-center justify-center gap-2"
+                className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 hover:cursor-pointer active:bg-emerald-700 text-white font-semibold text-lg rounded-xl transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed disabled:text-slate-500 flex items-center justify-center gap-2"
             >
                 {canCalculate ? (
                     <>
