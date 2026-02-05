@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GroceryData } from '../types';
+import groceryDataJson from '../data/grocery-data.json';
 
 interface UseGroceryDataResult {
 	data: GroceryData | null;
@@ -8,9 +9,10 @@ interface UseGroceryDataResult {
 }
 
 /**
- * Custom hook to fetch and manage grocery data
- * Handles data fetching, loading states, and error handling
- * @returns Object containing data, loading, and error states
+ * Custom hook to manage grocery data
+ * 
+ * This is the most reliable approach for GitHub Pages deployment.
+ * The data is bundled with your app, eliminating all path resolution issues.
  */
 export function useGroceryData(): UseGroceryDataResult {
 	const [data, setData] = useState<GroceryData | null>(null);
@@ -18,31 +20,16 @@ export function useGroceryData(): UseGroceryDataResult {
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		const controller = new AbortController();
-		// Fix: Simply concatenate the base URL with the path
-		const dataUrl = `${import.meta.env.BASE_URL}data/grocery-data.json`;
-
-		fetch(dataUrl, {
-			signal: controller.signal,
-		})
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error(`Failed to load data: ${response.statusText}`);
-				}
-				return response.json();
-			})
-			.then((jsonData: GroceryData) => {
-				setData(jsonData);
+		try {
+			// Use the imported JSON directly
+			setData(groceryDataJson as GroceryData);
+			setLoading(false);
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				setError(err.message);
 				setLoading(false);
-			})
-			.catch((err: unknown) => {
-				if (err instanceof Error && err.name !== 'AbortError') {
-					setError(err.message);
-					setLoading(false);
-				}
-			});
-
-		return () => controller.abort();
+			}
+		}
 	}, []);
 
 	return { data, loading, error };
