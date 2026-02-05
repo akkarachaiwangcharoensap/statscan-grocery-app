@@ -82,7 +82,7 @@ export default function ProductSearch({ products = [] }: ProductSearchProps): Re
 		try {
 			window.history.pushState({}, '', path);
 			window.dispatchEvent(new PopStateEvent('popstate'));
-		} catch (e) {
+		} catch {
 			window.location.href = path;
 		}
 	};
