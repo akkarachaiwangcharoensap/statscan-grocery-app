@@ -241,9 +241,9 @@ describe('PriceCalculator Component', () => {
 			// Should show "You're Paying More" not "same price"
 			expect(screen.getByText(/You're Paying More/i)).toBeInTheDocument();
 			
-			// Should display prices with appropriate decimal precision (4 decimals for <$0.01)
+			// Should display prices with appropriate decimal precision (4 decimals for user price, 5 decimals for official price)
 			expect(screen.getByText((content) => content.includes('$0.0080'))).toBeInTheDocument();
-			expect(screen.getByText((content) => content.includes('$0.0054'))).toBeInTheDocument();
+			expect(screen.getByText((content) => content.includes('$0.00540'))).toBeInTheDocument();
 			
 			// Should show percentage difference (formatted with space and 1 decimal place)
 			expect(screen.getByText((content) => content.includes('48.0'))).toBeInTheDocument();
@@ -263,9 +263,9 @@ describe('PriceCalculator Component', () => {
 			// Should show "You're Saving" not "same price"
 			expect(screen.getByText(/You're Saving/i)).toBeInTheDocument();
 			
-			// Should display prices with appropriate decimal precision
+			// Should display prices with appropriate decimal precision (user price 4 decimals, official price 5 decimals)
 			expect(screen.getByText((content) => content.includes('$0.0054'))).toBeInTheDocument();
-			expect(screen.getByText((content) => content.includes('$0.0080'))).toBeInTheDocument();
+			expect(screen.getByText((content) => content.includes('$0.00799'))).toBeInTheDocument();
 		});
 
 		it('shows same price when prices are truly equal within relative tolerance', () => {
@@ -282,8 +282,9 @@ describe('PriceCalculator Component', () => {
 			// Should show "same average"
 			expect(screen.getByText(/You're paying the same average/i)).toBeInTheDocument();
 			
-			// Should display same price with appropriate precision (uses bullet separator)
-			expect(screen.getByText((content) => content.includes('Your price: $0.0080 • StatsCan: $0.0080'))).toBeInTheDocument();
+			// Should display same price with appropriate precision (official price uses 5 decimals)
+			expect(screen.getByText((content) => content.includes('Your price: $0.0080'))).toBeInTheDocument();
+			expect(screen.getByText((content) => content.includes('StatsCan: $0.00799'))).toBeInTheDocument();
 		});
 
 		it('displays prices below $0.01 with 4 decimal places', () => {
@@ -297,9 +298,28 @@ describe('PriceCalculator Component', () => {
 			const props = { ...defaultProps, comparisonResult };
 			render(<PriceCalculator {...props} />);
 
-			// Prices should show 4 decimal places
+			// Prices should show appropriate decimal places (user price 4 decimals, official price 5 decimals)
 			expect(screen.getByText((content) => content.includes('$0.0013'))).toBeInTheDocument(); // 0.00125 rounds to 0.0013
-			expect(screen.getByText((content) => content.includes('$0.0099'))).toBeInTheDocument(); // 0.00987 rounds to 0.0099
+			expect(screen.getByText((content) => content.includes('$0.00987'))).toBeInTheDocument(); // 0.00987 preserved for official price
+		});
+
+		it('distinguishes user price 0.0020 vs official 0.00242', () => {
+			const comparisonResult = createMockComparisonResult({
+				userPrice: 0.0020,
+				statsCanPrice: 0.00242,
+				difference: -0.00042,
+				percentageDifference: -17.36,
+				isSaving: true,
+			});
+			const props = { ...defaultProps, comparisonResult };
+			render(<PriceCalculator {...props} />);
+
+			// User is saving (0.0020 < 0.00242)
+			expect(screen.getByText(/You're Saving/i)).toBeInTheDocument();
+
+			// Ensure precision: user price shows 4 decimals, official shows 5 decimals
+			expect(screen.getByText((content) => content.includes('$0.0020'))).toBeInTheDocument();
+			expect(screen.getByText((content) => content.includes('$0.00242'))).toBeInTheDocument();
 		});
 	});
 });

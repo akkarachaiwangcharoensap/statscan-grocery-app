@@ -36,11 +36,10 @@ export default function PriceCalculator({
         ? Boolean(userPrice) && currentPrice !== null
         : Boolean(productPrice) && Boolean(productVolume) && currentPrice !== null;
     
-    // Use relative tolerance: prices are same if difference is less than 1% of the base price
-    // This handles both large and very small prices appropriately
-    const isSame = comparisonResult 
-        ? Math.abs(comparisonResult.difference) < Math.max(0.001, comparisonResult.statsCanPrice * 0.01)
-        : false;
+    // Use relative tolerance: prices are the same if difference is less than 1% of the base price
+    // Use a very small minimum tolerance to avoid treating small but meaningful differences as equal
+    const tolerance = comparisonResult ? Math.max(1e-6, comparisonResult.statsCanPrice * 0.01) : 1e-6;
+    const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < tolerance : false;
 
     // Calculate price per unit when in price-volume mode
     const handlePriceVolumeCalculate = () => {
@@ -82,7 +81,7 @@ export default function PriceCalculator({
                     </div>
                     <p className="text-xl font-semibold text-slate-900">You're paying the same average!</p>
                     <p className="text-sm text-slate-600 mt-2">
-                        Your price: ${formatPrice(comparisonResult.userPrice)} • StatsCan: ${formatPrice(comparisonResult.statsCanPrice)}
+                        Your price: ${formatPrice(comparisonResult.userPrice)} • StatsCan: ${formatPrice(comparisonResult.statsCanPrice, { official: true })}
                     </p>
                 </div>
             )}
@@ -116,7 +115,7 @@ export default function PriceCalculator({
                         </span>
                     </div>
                     <p className="text-sm text-slate-600 mt-3">
-                        Your price: ${formatPrice(comparisonResult.userPrice)} vs StatsCan: ${formatPrice(comparisonResult.statsCanPrice)}
+                        Your price: ${formatPrice(comparisonResult.userPrice)} vs StatsCan: ${formatPrice(comparisonResult.statsCanPrice, { official: true })}
                     </p>
                 </div>
             )}

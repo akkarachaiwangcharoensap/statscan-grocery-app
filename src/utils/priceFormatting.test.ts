@@ -33,6 +33,15 @@ describe('priceFormatting utilities', () => {
 		});
 	});
 
+	describe('official price formatting', () => {
+		test('formats official very small prices with 5 decimal places', () => {
+			expect(formatPrice(0.00242, { official: true })).toBe('0.00242');
+			expect(formatPriceWithSymbol(0.00242, { official: true })).toBe('$0.00242');
+			// ensure default still uses 4 decimals
+			expect(formatPrice(0.00242)).toBe('0.0024');
+		});
+	});
+
 	describe('formatPriceWithSymbol', () => {
 		test('formats price with dollar sign', () => {
 			expect(formatPriceWithSymbol(1.23)).toBe('$1.23');

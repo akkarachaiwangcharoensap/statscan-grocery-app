@@ -12,15 +12,16 @@
  * @param price - The price to format
  * @returns Formatted price string without dollar sign
  */
-export function formatPrice(price: number): string {
+export function formatPrice(price: number, options?: { official?: boolean }): string {
 	// Handle zero explicitly
 	if (price === 0) {
 		return '0.00';
 	}
 	
 	if (price < 0.01) {
-		// For very small prices like ML conversions, show 4 decimals
-		return price.toFixed(4);
+		// For very small prices like ML conversions, show 4 decimals by default
+		// Official prices (StatsCan) should preserve an extra digit for conversions
+		return options && options.official ? price.toFixed(5) : price.toFixed(4);
 	}
 	if (price < 1) {
 		// For small prices, show 3 decimals
@@ -35,8 +36,8 @@ export function formatPrice(price: number): string {
  * @param price - The price to format
  * @returns Formatted price string with dollar sign
  */
-export function formatPriceWithSymbol(price: number): string {
-	return `$${formatPrice(price)}`;
+export function formatPriceWithSymbol(price: number, options?: { official?: boolean }): string {
+	return `$${formatPrice(price, options)}`;
 }
 
 /**

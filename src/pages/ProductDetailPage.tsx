@@ -385,7 +385,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 									</p>
 									<div className="flex items-baseline gap-3">
 										<span className="text-5xl sm:text-6xl font-semibold text-slate-900 tracking-tight">
-										${formatPrice(displayPrice !== null ? displayPrice : currentPrice)}
+										${formatPrice(displayPrice !== null ? displayPrice : currentPrice, { official: true })}
 										</span>
 										<span className="text-xl text-slate-600 font-medium">
 											per {formatUnit(selectedDisplayUnit || product.product_unit)}
