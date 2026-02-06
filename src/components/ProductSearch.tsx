@@ -5,14 +5,13 @@ import { slugify } from '../utils';
 
 interface ProductSearchProps {
 	products?: Product[];
-	onNavigate?: (path: string, opts?: Record<string, unknown>) => void;
 }
 
 /**
  * ProductSearch component with typeahead suggestions and keyboard navigation
  * Apple-inspired flat design with Font Awesome icons
  */
-export default function ProductSearch({ products = [], onNavigate }: ProductSearchProps): React.ReactElement {
+export default function ProductSearch({ products = [] }: ProductSearchProps): React.ReactElement {
 	const [query, setQuery] = useState<string>('');
 	const [results, setResults] = useState<Product[]>([]);
 	const [open, setOpen] = useState<boolean>(false);
@@ -37,9 +36,9 @@ export default function ProductSearch({ products = [], onNavigate }: ProductSear
 				.slice(0, 8);
 
 			setResults(matches);
-		// Show dropdown area whenever there is a non-empty query. The render
-		// will decide whether to show the result list or a "no results" message
-		setOpen(!!q);
+			// Show dropdown area whenever there is a non-empty query. The render
+			// will decide whether to show the result list or a "no results" message
+			setOpen(!!q);
 			setActiveIndex(-1);
 		}, 180);
 
@@ -79,12 +78,6 @@ export default function ProductSearch({ products = [], onNavigate }: ProductSear
 		inputRef.current?.blur();
 
 		const path = `${import.meta.env.BASE_URL || ''}products/${p.product_category}/${slugify(p.product_name)}`;
-
-		// Prefer programmatic navigation if provided (useful in tests), otherwise fall back to history API
-		if (onNavigate) {
-			onNavigate(path);
-			return;
-		}
 
 		try {
 			window.history.pushState({}, '', path);
@@ -153,24 +146,24 @@ export default function ProductSearch({ products = [], onNavigate }: ProductSear
 				<input
 					id="product-search"
 					ref={inputRef}
-				type="text"
-				value={query}
-				onChange={(e) => setQuery(e.target.value)}
-				onKeyDown={onKeyDown}
-				onFocus={() => setIsFocused(true)}
-				onBlur={() => setIsFocused(false)}
-				placeholder="Search products (e.g. milk, chicken, bread)"
-				className={`w-full pl-12 pr-12 py-4 bg-slate-50 rounded-2xl text-base text-slate-900 placeholder:text-slate-400 min-h-[56px] transition-all border-2 ${isFocused
-					? 'border-emerald-500 bg-white'
-					: 'border-transparent'
-					} focus:outline-none`}
-role="searchbox"
-				aria-label="Search products"
-				aria-autocomplete="list"
-				aria-controls="product-search-list"
-				aria-haspopup="listbox"
+					type="text"
+					value={query}
+					onChange={(e) => setQuery(e.target.value)}
+					onKeyDown={onKeyDown}
+					onFocus={() => setIsFocused(true)}
+					onBlur={() => setIsFocused(false)}
+					placeholder="Search products (e.g. milk, chicken, bread)"
+					className={`w-full pl-12 pr-12 py-4 bg-slate-50 rounded-2xl text-base text-slate-900 placeholder:text-slate-400 min-h-[56px] transition-all border-2 ${isFocused
+						? 'border-emerald-500 bg-white'
+						: 'border-transparent'
+						} focus:outline-none`}
+					role="searchbox"
+					aria-label="Search products"
+					aria-autocomplete="list"
+					aria-controls="product-search-list"
+					aria-haspopup="listbox"
 
-			/>
+				/>
 
 				{/* Clear Button */}
 				{query && (

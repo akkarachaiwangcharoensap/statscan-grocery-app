@@ -4,6 +4,7 @@ import ProductSearch from '../components/ProductSearch';
 import UnitConverter from '../components/UnitConverter';
 import PriceCalculator from '../components/PriceCalculator';
 import { Product } from '../types';
+import { slugify } from '../utils';
 
 describe('Integration Tests - Product Search and Price Comparison Flow', () => {
 	const mockProducts: Product[] = [
@@ -12,12 +13,10 @@ describe('Integration Tests - Product Search and Price Comparison Flow', () => {
 	];
 
 	it('integrates search, unit conversion, and price calculator', async () => {
-		const handleSearch = jest.fn();
+		const pushSpy = jest.spyOn(window.history, 'pushState');
 
 		render(
-				<>
-					<ProductSearch products={mockProducts} onNavigate={handleSearch} />
-				</>
+			<ProductSearch products={mockProducts} />
 		);
 
 		// User searches for a product
@@ -32,6 +31,13 @@ describe('Integration Tests - Product Search and Price Comparison Flow', () => {
 		const options = screen.getAllByRole('option');
 		expect(options.length).toBeGreaterThan(0);
 		expect(options.some((opt) => /Milk\s*2%/i.test(opt.textContent || ''))).toBe(true);
+
+		// Click the first result and assert navigation uses history API
+		fireEvent.click(options[0]);
+
+		const expectedPath = `${import.meta.env.BASE_URL || ''}products/${mockProducts[0].product_category}/${slugify(mockProducts[0].product_name)}`;
+		expect(pushSpy).toHaveBeenCalledWith({}, '', expectedPath);
+		pushSpy.mockRestore();
 	});
 
 	it('allows user to compare their price with unit conversion', async () => {
