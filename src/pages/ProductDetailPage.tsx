@@ -100,7 +100,7 @@ export default function ProductDetailPage(): React.ReactElement {
 	}, [selectedYear, selectedLocationLocal, filteredPrices]);
 
 	useEffect(() => {
-		if (!product) 
+		if (!product)
 			return;
 
 		const base = getCurrentPrice();
@@ -163,7 +163,7 @@ export default function ProductDetailPage(): React.ReactElement {
 		}
 	}, [getCurrentPrice, product]);
 
-	if (loading) 
+	if (loading)
 		return <LoadingSpinner message="Loading product details..." />;
 
 	if (error) {
@@ -231,33 +231,22 @@ export default function ProductDetailPage(): React.ReactElement {
 										type="button"
 										aria-label="Show prices per kilogram"
 										aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'kg'}
-								onClick={() => handleUnitChange('kg')}
+										onClick={() => handleUnitChange('kg')}
+										className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'kg'
+											? 'bg-emerald-500 text-white'
+											: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+											}`}
 									>
 										KG
 									</button>
-
 									<button
 										type="button"
 										aria-label="Show prices per pound"
-										aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'lb'}
-										onClick={() => {
-											const newUnit = 'lb';
-											try {
-												const base = getCurrentPrice();
-												if (base !== null) {
-													const converted = convertPricePerUnit(base, product.product_unit, newUnit);
-													setSelectedDisplayUnit(newUnit);
-													setDisplayPrice(converted);
-												} else {
-													setSelectedDisplayUnit(newUnit);
-												}
-											} catch (err) {
-												console.error('Conversion error', err);
-											}
-										}}
+										aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'kg'}
+										onClick={() => handleUnitChange('lb')}
 										className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'lb'
-												? 'bg-emerald-500 text-white'
-												: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+											? 'bg-emerald-500 text-white'
+											: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
 											}`}
 									>
 										LB
@@ -265,52 +254,52 @@ export default function ProductDetailPage(): React.ReactElement {
 								</div>
 							)}
 
-						{/* Unit Toggle (if volume unit) */}
-						{isVolumeUnit(product.product_unit.toLowerCase()) && (
-							<div className="flex rounded-xl overflow-hidden bg-slate-200">
-								<button
-									type="button"
-									aria-label="Show prices per litre"
-									aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'l'}
-									onClick={() => handleUnitChange('l')}
-								className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'l'
-									? 'bg-emerald-500 text-white'
-									: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
-								}`}
-							>
-								L
-							</button>
+							{/* Unit Toggle (if volume unit) */}
+							{isVolumeUnit(product.product_unit.toLowerCase()) && (
+								<div className="flex rounded-xl overflow-hidden bg-slate-200">
+									<button
+										type="button"
+										aria-label="Show prices per litre"
+										aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'l'}
+										onClick={() => handleUnitChange('l')}
+										className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'l'
+											? 'bg-emerald-500 text-white'
+											: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+											}`}
+									>
+										L
+									</button>
 
-							<button
-								type="button"
-								aria-label="Show prices per millilitre"
-								aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'ml'}
-					onClick={() => handleUnitChange('ml')}
-								className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'ml'
-									? 'bg-emerald-500 text-white'
-									: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
-								}`}
-							>
-								ML
-							</button>
+									<button
+										type="button"
+										aria-label="Show prices per millilitre"
+										aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'ml'}
+										onClick={() => handleUnitChange('ml')}
+										className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'ml'
+											? 'bg-emerald-500 text-white'
+											: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+											}`}
+									>
+										ML
+									</button>
 
-							<button
-								type="button"
-								aria-label="Show prices per fluid ounce"
-								aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'oz'}
-								onClick={() => handleUnitChange('oz')}
-								className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'oz'
-									? 'bg-emerald-500 text-white'
-									: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
-								}`}
-							>
-								OZ
-							</button>
-							</div>
-						)}
+									<button
+										type="button"
+										aria-label="Show prices per fluid ounce"
+										aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'oz'}
+										onClick={() => handleUnitChange('oz')}
+										className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'oz'
+											? 'bg-emerald-500 text-white'
+											: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+											}`}
+									>
+										OZ
+									</button>
+								</div>
+							)}
 
-					{!isWeightUnit(product.product_unit.toLowerCase()) && !isVolumeUnit(product.product_unit.toLowerCase()) && (
-						<div className="flex items-center gap-2 px-4 py-3 bg-slate-200 rounded-xl">
+							{!isWeightUnit(product.product_unit.toLowerCase()) && !isVolumeUnit(product.product_unit.toLowerCase()) && (
+								<div className="flex items-center gap-2 px-4 py-3 bg-slate-200 rounded-xl">
 									<i className="fas fa-balance-scale text-slate-700" aria-hidden="true"></i>
 									<span className="text-sm font-bold text-slate-900">
 										per {formatUnit(selectedDisplayUnit || product.product_unit)}
@@ -368,7 +357,7 @@ export default function ProductDetailPage(): React.ReactElement {
 									</p>
 									<div className="flex items-baseline gap-3">
 										<span className="text-4xl sm:text-6xl font-semibold text-slate-900 tracking-tight">
-										${formatPrice(displayPrice !== null ? displayPrice : currentPrice, { official: true })}
+											${formatPrice(displayPrice !== null ? displayPrice : currentPrice, { official: true })}
 										</span>
 										<span className="text-base sm:text-xl text-slate-600 font-medium">
 											per {formatUnit(selectedDisplayUnit || product.product_unit)}

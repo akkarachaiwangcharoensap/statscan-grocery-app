@@ -1,136 +1,111 @@
-<p align="center">
-  <img src="public/grocery-app-logo.png" width="86" alt="statscan-grocery-app logo" />
-</p>
+![StatsCan Grocery App](public/android-chrome-192.png)
 
-# Canadian Grocery Price Tracker
+# StatsCan Grocery App
 
-Lightweight, accessible React + TypeScript app for exploring and comparing grocery prices using Statistics Canada data. Use it to browse categories, search products with accessible typeahead, and compare local prices against national averages (with built-in unit conversions).
-
-**Live demo:** https://akkarachaiwangcharoensap.github.io/statscan-grocery-app
+A small, accessible Progressive Web App (PWA) for exploring grocery price data published by Statistics Canada. Built with React, Vite and TypeScript — it processes the official CSV data into a compact JSON dataset and presents interactive product, category and location views.
 
 ---
 
-## Key Features
+## Installation
 
-- Accessible product search with keyboard navigation and typeahead
-- Compare prices per unit against official StatsCan averages (percentage differences)
-- Unit conversion helpers (kg ↔ lb, L ↔ oz, etc.) and a simple price calculator
-- Reproducible dataset pipeline: CSV → JSON (Python script included)
-- Unit tests (Vitest) and E2E tests (Playwright)
+Prerequisites:
+- Node.js (18+ recommended)
+- Python 3.x (for data processing)
 
-> [!tip]
-> Focus on accessibility: components use role-based locators and ARIA attributes to improve keyboard and screen reader experiences.
-
----
-
-## Quick Start
-
-Prerequisites: Node.js (LTS recommended) and npm. Optional: Python 3 + pandas to regenerate the dataset.
-
-1. Clone and install dependencies
+Install dependencies and run locally:
 
 ```bash
-git clone <repo-url>
-cd statscan-grocery-app
-npm ci
-```
-
-2. Start the dev server
-
-```bash
+npm install
 npm run dev
 # Open http://localhost:3000
 ```
 
-3. Build for production
+Build for production and preview the production bundle:
 
 ```bash
 npm run build
+npm run preview
 ```
 
----
-
-## Data: Regenerate the dataset
-
-The app consumes `public/data/grocery-data.json`. To recreate it from the raw CSV:
+Process the original Statistics Canada CSV into the app's JSON format:
 
 ```bash
-# optional: create a venv
-python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-
-# convert CSV -> JSON
 python process_statscan_to_json.py data/statscan-full.csv public/data/grocery-data.json
 ```
 
 > [!note]
-> The repository includes `process_statscan_to_json.py` and `requirements.txt` (pandas).
+> The repo includes a sample dataset in `data/statscan-full.csv`. The processing script is `process_statscan_to_json.py` — read its docstring for options and behavior.
 
 ---
 
-## Tests & Quality
+## Features
 
-Unit tests (Vitest):
+- Browse and search grocery products by name
+- Filter by category and location
+- Pricing and conversions (kg / L / unit)
+- Accessible UI built with web-first locators and a11y considerations
+- PWA support (offline-first caching via Workbox)
+
+---
+
+## Testing
+
+Run unit tests and component tests with Vitest:
 
 ```bash
-npm run test       # watch
-npm run test:run   # single run
+npm run test
+npm run test:all
+npm run test:ui   # interactive UI
 npm run test:coverage
 ```
 
-End-to-end (Playwright):
+End-to-end tests use Playwright:
 
 ```bash
-npx playwright install --with-deps
 npm run e2e
-# or run headed for debugging
 npm run e2e:headed
 ```
 
-Linting & type checks:
+For a full verification run (unit, e2e, lint, types):
 
 ```bash
-npm run lint
-npm run type-check
+npm run test:all
 ```
+
+Playwright reports are saved under `playwright-report/` when tests run.
+
+---
+
+## Project structure (high level)
+
+- `src/` — React app source (components, hooks, pages, utils)
+- `public/` — static assets and PWA icons
+- `data/` — raw CSV source data
+- `tests/` — Playwright e2e specs
+- `process_statscan_to_json.py` — CSV → JSON processor
+- `build/` — production build output
 
 ---
 
 ## CI & Deployment
 
-GitHub Actions run linting, type checks, unit tests, and Playwright E2E. A deploy workflow publishes the `build/` output to GitHub Pages for the `main` branch.
+- The Vite config is set to detect GitHub Actions and use a repo subpath (`/statscan-grocery-app/`) when appropriate.
+- The app is a static PWA and can be served from GitHub Pages, Netlify, Vercel, or any static host — just build and publish the `build/` directory.
 
 > [!note]
-> `vite.config.ts` sets `base` to `/statscan-grocery-app/` when running in CI to support Pages deployment.
+> The repo contains a Playwright config that will spawn `npm start` for local testing. CI workflows should ensure `npm run build` and `npm start` are available before running e2e tests.
 
 ---
 
-## Project Layout
+## Development notes & tips
 
-- `public/` — static assets and `public/data/grocery-data.json`
-- `src/` — React app (components, pages, hooks, utils)
-  - `components/` — reusable UI pieces
-  - `pages/` — route-based pages (Home, Products, ProductDetail)
-  - `hooks/`, `utils/` — small helpers and utilities
-- `tests/` — Playwright E2E tests
-- `process_statscan_to_json.py` — CSV → JSON conversion script
-
----
-
-## Developing & Contributing
-
-- Keep changes small and well-scoped. Add tests for new behavior.
-- Tests follow Playwright best practices (role-based locators, auto-retrying assertions). See `.github/instructions/playwright-typescript.instructions.md` for guidelines.
-
----
-
-## Built with
-
-Vite, React, TypeScript, Vitest, Playwright, and pandas (for data processing)
+- Use role- and label-based locators in tests for resilience and accessibility (see `.github/instructions/playwright-typescript.instructions.md`).
+- Keep component tests focused and use `test.step()` for readability in e2e tests.
+- `vite-plugin-pwa` is configured in `vite.config.ts` to include common icons and caching settings; adjust Workbox options if your static assets grow.
 
 ---
 
 ## Acknowledgements
 
-- Statistics Canada — source data
-- Thanks to the open-source community for the libraries used here
+This project consumes and republishes aggregated grocery price data published by Statistics Canada. See `process_statscan_to_json.py` for data transformation logic.
