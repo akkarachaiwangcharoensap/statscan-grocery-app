@@ -68,7 +68,7 @@ export default function PriceCalculator({
     };
 
     return (
-        <div className="bg-slate-50 rounded-3xl p-6 sm:p-8">
+        <div className="bg-slate-50 rounded-3xl p-4 sm:p-8">
             {/* Results Banner - Same Price */}
             {comparisonResult && isSame && (
                 <div
@@ -77,9 +77,9 @@ export default function PriceCalculator({
                     className="mb-6 p-6 rounded-2xl text-center bg-slate-100 border-2 border-slate-300"
                 >
                     <div className="mb-2">
-                        <i className="fas fa-equals text-3xl text-slate-600" aria-hidden="true"></i>
+                        <i className="fas fa-equals text-2xl sm:text-3xl text-slate-600" aria-hidden="true"></i>
                     </div>
-                    <p className="text-xl font-semibold text-slate-900">You're paying the same average!</p>
+                    <p className="text-lg sm:text-xl font-semibold text-slate-900">You're paying the same average!</p>
                     <p className="text-sm text-slate-600 mt-2">
                         Your price: ${formatPrice(comparisonResult.userPrice)} • StatsCan: ${formatPrice(comparisonResult.statsCanPrice, { official: true })}
                     </p>
@@ -97,19 +97,19 @@ export default function PriceCalculator({
                         }`}
                 >
                     <div className="mb-2">
-                        <i className={`fas ${comparisonResult.isSaving ? 'fa-arrow-down' : 'fa-arrow-up'} text-3xl ${comparisonResult.isSaving ? 'text-emerald-600' : 'text-red-600'
+                        <i className={`fas ${comparisonResult.isSaving ? 'fa-arrow-down' : 'fa-arrow-up'} text-2xl sm:text-3xl ${comparisonResult.isSaving ? 'text-emerald-600' : 'text-red-600'
                             }`} aria-hidden="true"></i>
                     </div>
-                    <p className={`text-xl font-semibold ${comparisonResult.isSaving ? 'text-emerald-900' : 'text-red-900'
+                    <p className={`text-lg sm:text-xl font-semibold ${comparisonResult.isSaving ? 'text-emerald-900' : 'text-red-900'
                         }`}>
                         {comparisonResult.isSaving ? "You're Saving" : "You're Paying More"}
                     </p>
                     <div className="flex items-baseline justify-center gap-2 mt-2">
-                        <span className={`text-3xl font-bold ${comparisonResult.isSaving ? 'text-emerald-700' : 'text-red-700'
+                        <span className={`text-2xl sm:text-3xl font-bold ${comparisonResult.isSaving ? 'text-emerald-700' : 'text-red-700'
                             }`}>
                             {comparisonResult.isSaving ? '-' : '+'}${formatPrice(Math.abs(comparisonResult.difference))}
                         </span>
-                        <span className={`text-lg font-medium ${comparisonResult.isSaving ? 'text-emerald-600' : 'text-red-600'
+                        <span className={`text-base sm:text-lg font-medium ${comparisonResult.isSaving ? 'text-emerald-600' : 'text-red-600'
                             }`}>
                             ({Math.abs(comparisonResult.percentageDifference).toFixed(1)}%)
                         </span>
@@ -243,9 +243,9 @@ export default function PriceCalculator({
                                     <i className="fas fa-calculator mr-1" aria-hidden="true"></i>
                                     Calculated Price per {unit.toUpperCase()}
                                 </p>
-                                <p className="text-2xl font-bold text-emerald-900">
+                                <p className="text-xl sm:text-2xl font-bold text-emerald-900">
                                     ${preview}
-                                    <span className="text-sm font-medium text-emerald-600 ml-2">per {unit}</span>
+                                    <span className="text-xs sm:text-sm font-medium text-emerald-600 ml-2">per {unit}</span>
                                 </p>
                             </div>
                         );

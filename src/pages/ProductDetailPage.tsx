@@ -211,7 +211,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 				{/* Product Info Card */}
 				<div className="bg-slate-50 rounded-3xl overflow-hidden mb-5">
 					{/* Product Header */}
-					<div className="p-6 sm:p-8 border-b border-slate-200">
+					<div className="p-4 sm:p-8 border-b border-slate-200">
 						<div className="flex items-start justify-between gap-4 mb-6">
 							<div className="flex-1 min-w-0">
 								<h1 className="text-3xl sm:text-4xl font-semibold text-slate-900 capitalize break-words mb-3 tracking-tight">
@@ -376,28 +376,28 @@ export default function ProductDetailPage(): React.JSX.Element {
 
 					{/* Price Display */}
 					{currentPrice !== null && (
-						<div className="p-6 sm:p-8 bg-emerald-50">
+						<div className="p-4 sm:p-8 bg-emerald-50">
 							<div className="flex items-end justify-between">
 								<div>
-									<p className="text-sm font-semibold text-emerald-800 mb-2 uppercase tracking-wide">
+									<p className="text-xs sm:text-sm font-semibold text-emerald-800 mb-2 uppercase tracking-wide">
 										<i className="fas fa-check-circle mr-1" aria-hidden="true"></i>
 										Official Price
 									</p>
 									<div className="flex items-baseline gap-3">
-										<span className="text-5xl sm:text-6xl font-semibold text-slate-900 tracking-tight">
+										<span className="text-4xl sm:text-6xl font-semibold text-slate-900 tracking-tight">
 										${formatPrice(displayPrice !== null ? displayPrice : currentPrice, { official: true })}
 										</span>
-										<span className="text-xl text-slate-600 font-medium">
+										<span className="text-base sm:text-xl text-slate-600 font-medium">
 											per {formatUnit(selectedDisplayUnit || product.product_unit)}
 										</span>
 									</div>
 								</div>
 								<div className="text-right">
-									<p className="text-sm font-semibold text-slate-900">
+									<p className="text-xs sm:text-sm font-semibold text-slate-900">
 										<i className="fas fa-map-pin mr-1" aria-hidden="true"></i>
 										{selectedLocationLocal}
 									</p>
-									<p className="text-sm text-slate-600">{selectedYear}</p>
+									<p className="text-xs sm:text-sm text-slate-600">{selectedYear}</p>
 								</div>
 							</div>
 						</div>
@@ -405,7 +405,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 
 					{/* No Data Message */}
 					{!currentPrice && selectedYear && selectedLocationLocal && (
-						<div className="p-6 sm:p-8 bg-yellow-50 border-t border-yellow-200">
+						<div className="p-4 sm:p-8 bg-yellow-50 border-t border-yellow-200">
 							<div className="flex items-center gap-3">
 								<i className="fas fa-exclamation-circle text-2xl text-yellow-600" aria-hidden="true"></i>
 								<div>
