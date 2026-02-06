@@ -24,12 +24,12 @@ const WEIGHT_CONVERSIONS: UnitConversions = {
 
 /**
  * Volume unit conversions — include fluid ounce (oz) as a volume unit
- * and allow liters <-> oz conversions only
+ * and also support millilitres (ml). Provide sensible conversions L <-> OZ <-> ML
  */
 const VOLUME_CONVERSIONS: UnitConversions = {
-	l: ['oz'],
-	oz: ['l'],
-	ml: ['l'],
+	l: ['oz', 'ml'],
+	oz: ['l', 'ml'],
+	ml: ['l', 'oz'],
 };
 
 /**

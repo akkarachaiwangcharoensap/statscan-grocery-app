@@ -225,4 +225,81 @@ describe('PriceCalculator Component', () => {
 
 		expect(screen.getByText((content) => content.replace(/\s+/g, '').includes('(20.0%)'))).toBeInTheDocument();
 	});
+
+	describe('Very Small Price Comparisons', () => {
+		it('correctly identifies difference when user pays 0.00799 and statscan is 0.0054', () => {
+			const comparisonResult = createMockComparisonResult({
+				userPrice: 0.00799,
+				statsCanPrice: 0.0054,
+				difference: 0.00259,
+				percentageDifference: 47.96,
+				isSaving: false,
+			});
+			const props = { ...defaultProps, comparisonResult };
+			render(<PriceCalculator {...props} />);
+
+			// Should show "You're Paying More" not "same price"
+			expect(screen.getByText(/You're Paying More/i)).toBeInTheDocument();
+			
+			// Should display prices with appropriate decimal precision (4 decimals for <$0.01)
+			expect(screen.getByText((content) => content.includes('$0.0080'))).toBeInTheDocument();
+			expect(screen.getByText((content) => content.includes('$0.0054'))).toBeInTheDocument();
+			
+			// Should show percentage difference (formatted with space and 1 decimal place)
+			expect(screen.getByText((content) => content.includes('48.0'))).toBeInTheDocument();
+		});
+
+		it('correctly identifies difference when user pays 0.0054 and statscan is 0.00799', () => {
+			const comparisonResult = createMockComparisonResult({
+				userPrice: 0.0054,
+				statsCanPrice: 0.00799,
+				difference: -0.00259,
+				percentageDifference: -32.42,
+				isSaving: true,
+			});
+			const props = { ...defaultProps, comparisonResult };
+			render(<PriceCalculator {...props} />);
+
+			// Should show "You're Saving" not "same price"
+			expect(screen.getByText(/You're Saving/i)).toBeInTheDocument();
+			
+			// Should display prices with appropriate decimal precision
+			expect(screen.getByText((content) => content.includes('$0.0054'))).toBeInTheDocument();
+			expect(screen.getByText((content) => content.includes('$0.0080'))).toBeInTheDocument();
+		});
+
+		it('shows same price when prices are truly equal within relative tolerance', () => {
+			const comparisonResult = createMockComparisonResult({
+				userPrice: 0.00799,
+				statsCanPrice: 0.00799,
+				difference: 0,
+				percentageDifference: 0,
+				isSaving: false,
+			});
+			const props = { ...defaultProps, comparisonResult };
+			render(<PriceCalculator {...props} />);
+
+			// Should show "same average"
+			expect(screen.getByText(/You're paying the same average/i)).toBeInTheDocument();
+			
+			// Should display same price with appropriate precision (uses bullet separator)
+			expect(screen.getByText((content) => content.includes('Your price: $0.0080 • StatsCan: $0.0080'))).toBeInTheDocument();
+		});
+
+		it('displays prices below $0.01 with 4 decimal places', () => {
+			const comparisonResult = createMockComparisonResult({
+				userPrice: 0.00125,
+				statsCanPrice: 0.00987,
+				difference: -0.00862,
+				percentageDifference: -87.33,
+				isSaving: true,
+			});
+			const props = { ...defaultProps, comparisonResult };
+			render(<PriceCalculator {...props} />);
+
+			// Prices should show 4 decimal places
+			expect(screen.getByText((content) => content.includes('$0.0013'))).toBeInTheDocument(); // 0.00125 rounds to 0.0013
+			expect(screen.getByText((content) => content.includes('$0.0099'))).toBeInTheDocument(); // 0.00987 rounds to 0.0099
+		});
+	});
 });

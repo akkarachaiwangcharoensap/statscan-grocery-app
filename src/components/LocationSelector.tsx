@@ -4,7 +4,7 @@ import { useLocationPreference } from '../hooks/useLocationPreference';
 import { abbreviateProvince } from '../utils/stringUtils';
 
 export default function LocationSelector(): React.JSX.Element | null {
-    const { data, isLoading } = useGroceryData();
+    const { data, loading } = useGroceryData();
     const { location, setLocation } = useLocationPreference();
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -22,7 +22,7 @@ export default function LocationSelector(): React.JSX.Element | null {
     }, []);
 
     // Show loading state
-    if (isLoading || !data) {
+    if (loading || !data) {
         return (
             <div className="relative">
                 <button

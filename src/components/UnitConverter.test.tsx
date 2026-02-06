@@ -47,15 +47,18 @@ describe('UnitConverter Component', () => {
 		expect(screen.queryByText('Convert Unit')).not.toBeInTheDocument();
 	});
 
-	test('handles volume unit conversion', () => {
+	test('handles volume unit conversion including ML', () => {
 		const onUnitChange = jest.fn();
 		const props = { baseUnit: 'l', basePrice: 5, onUnitChange };
 		render(<UnitConverter {...props} />);
 
 		const ozRadio = screen.getByRole('radio', { name: /OZ/i });
+		const mlRadio = screen.getByRole('radio', { name: /ML/i });
 		fireEvent.click(ozRadio);
-
 		expect(onUnitChange).toHaveBeenCalledWith('oz', expect.any(Number));
+
+		fireEvent.click(mlRadio);
+		expect(onUnitChange).toHaveBeenCalledWith('ml', expect.any(Number));
 	});
 
 	test('passes correct converted price to onUnitChange callback', () => {

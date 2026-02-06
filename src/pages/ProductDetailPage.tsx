@@ -5,7 +5,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import ProductHeader from '../components/ProductHeader';
 import ProductSearch from '../components/ProductSearch';
 import PriceCalculator from '../components/PriceCalculator';
-import { slugify } from '../utils';
+import { slugify, formatPrice } from '../utils';
 import { useGroceryData } from '../hooks';
 import { isWeightUnit, isVolumeUnit, convertPricePerUnit, formatUnit } from '../utils';
 import { useLocationPreference } from '../hooks/useLocationPreference';
@@ -143,6 +143,25 @@ export default function ProductDetailPage(): React.JSX.Element {
 		});
 	}, [displayPrice, getCurrentPrice, userPrice, product, selectedLocationLocal, selectedYear]);
 
+	/**
+	 * Handle unit conversion with proper error handling
+	 * Extracts common logic from all unit toggle buttons
+	 */
+	const handleUnitChange = useCallback((newUnit: string) => {
+		try {
+			const base = getCurrentPrice();
+			if (base !== null) {
+				const converted = convertPricePerUnit(base, product!.product_unit, newUnit);
+				setSelectedDisplayUnit(newUnit);
+				setDisplayPrice(converted);
+			} else {
+				setSelectedDisplayUnit(newUnit);
+			}
+		} catch (err) {
+			console.error('Conversion error', err);
+		}
+	}, [getCurrentPrice, product]);
+
 	if (loading) 
 		return <LoadingSpinner message="Loading product details..." />;
 
@@ -270,21 +289,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 									type="button"
 									aria-label="Show prices per litre"
 									aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'l'}
-									onClick={() => {
-										const newUnit = 'l';
-										try {
-											const base = getCurrentPrice();
-											if (base !== null) {
-												const converted = convertPricePerUnit(base, product.product_unit, newUnit);
-												setSelectedDisplayUnit(newUnit);
-												setDisplayPrice(converted);
-											} else {
-												setSelectedDisplayUnit(newUnit);
-											}
-										} catch (err) {
-										console.error('Conversion error', err);
-									}
-								}}
+									onClick={() => handleUnitChange('l')}
 								className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'l'
 									? 'bg-emerald-500 text-white'
 									: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
@@ -295,23 +300,22 @@ export default function ProductDetailPage(): React.JSX.Element {
 
 							<button
 								type="button"
+								aria-label="Show prices per millilitre"
+								aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'ml'}
+					onClick={() => handleUnitChange('ml')}
+								className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'ml'
+									? 'bg-emerald-500 text-white'
+									: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+								}`}
+							>
+								ML
+							</button>
+
+							<button
+								type="button"
 								aria-label="Show prices per fluid ounce"
 								aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'oz'}
-								onClick={() => {
-									const newUnit = 'oz';
-									try {
-										const base = getCurrentPrice();
-										if (base !== null) {
-											const converted = convertPricePerUnit(base, product.product_unit, newUnit);
-											setSelectedDisplayUnit(newUnit);
-											setDisplayPrice(converted);
-										} else {
-											setSelectedDisplayUnit(newUnit);
-										}
-									} catch (err) {
-										console.error('Conversion error', err);
-									}
-								}}
+								onClick={() => handleUnitChange('oz')}
 								className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'oz'
 									? 'bg-emerald-500 text-white'
 									: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
@@ -381,7 +385,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 									</p>
 									<div className="flex items-baseline gap-3">
 										<span className="text-5xl sm:text-6xl font-semibold text-slate-900 tracking-tight">
-											${(displayPrice !== null ? displayPrice : currentPrice).toFixed(2)}
+										${formatPrice(displayPrice !== null ? displayPrice : currentPrice)}
 										</span>
 										<span className="text-xl text-slate-600 font-medium">
 											per {formatUnit(selectedDisplayUnit || product.product_unit)}

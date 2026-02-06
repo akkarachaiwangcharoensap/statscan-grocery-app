@@ -4,3 +4,4 @@
 
 export * from './unitConversion';
 export * from './stringUtils';
+export * from './priceFormatting';

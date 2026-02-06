@@ -204,6 +204,7 @@ describe('Integration Tests - Unit Conversion Edge Cases', () => {
 		// Volume units should be available
 		expect(screen.getByRole('radio', { name: /^L$/i })).toBeInTheDocument();
 		expect(screen.getByRole('radio', { name: /OZ$/i })).toBeInTheDocument();
+		expect(screen.getByRole('radio', { name: /ML$/i })).toBeInTheDocument();
 	});
 
 	it('handles weight unit conversions correctly', () => {

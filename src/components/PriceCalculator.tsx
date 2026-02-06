@@ -1,5 +1,6 @@
 import React from 'react';
 import { ComparisonResult } from '../types';
+import { formatPrice } from '../utils';
 
 interface PriceCalculatorProps {
     userPrice: string;
@@ -35,7 +36,11 @@ export default function PriceCalculator({
         ? Boolean(userPrice) && currentPrice !== null
         : Boolean(productPrice) && Boolean(productVolume) && currentPrice !== null;
     
-const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 : false;
+    // Use relative tolerance: prices are same if difference is less than 1% of the base price
+    // This handles both large and very small prices appropriately
+    const isSame = comparisonResult 
+        ? Math.abs(comparisonResult.difference) < Math.max(0.001, comparisonResult.statsCanPrice * 0.01)
+        : false;
 
     // Calculate price per unit when in price-volume mode
     const handlePriceVolumeCalculate = () => {
@@ -77,7 +82,7 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
                     </div>
                     <p className="text-xl font-semibold text-slate-900">You're paying the same average!</p>
                     <p className="text-sm text-slate-600 mt-2">
-                        Your price: ${comparisonResult.userPrice.toFixed(2)} • StatsCan: ${comparisonResult.statsCanPrice.toFixed(2)}
+                        Your price: ${formatPrice(comparisonResult.userPrice)} • StatsCan: ${formatPrice(comparisonResult.statsCanPrice)}
                     </p>
                 </div>
             )}
@@ -103,7 +108,7 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
                     <div className="flex items-baseline justify-center gap-2 mt-2">
                         <span className={`text-3xl font-bold ${comparisonResult.isSaving ? 'text-emerald-700' : 'text-red-700'
                             }`}>
-                            {comparisonResult.isSaving ? '-' : '+'}${Math.abs(comparisonResult.difference).toFixed(2)}
+                            {comparisonResult.isSaving ? '-' : '+'}${formatPrice(Math.abs(comparisonResult.difference))}
                         </span>
                         <span className={`text-lg font-medium ${comparisonResult.isSaving ? 'text-emerald-600' : 'text-red-600'
                             }`}>
@@ -111,7 +116,7 @@ const isSame = comparisonResult ? Math.abs(comparisonResult.difference) < 0.01 :
                         </span>
                     </div>
                     <p className="text-sm text-slate-600 mt-3">
-                        Your price: ${comparisonResult.userPrice.toFixed(2)} vs StatsCan: ${comparisonResult.statsCanPrice.toFixed(2)}
+                        Your price: ${formatPrice(comparisonResult.userPrice)} vs StatsCan: ${formatPrice(comparisonResult.statsCanPrice)}
                     </p>
                 </div>
             )}

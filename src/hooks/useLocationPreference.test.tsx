@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, test, beforeEach } from 'vitest';
 import { useLocationPreference } from './useLocationPreference';
-import React from 'react';
 
 function TestComp({ id }: { id: string }) {
 	const { location, setLocation } = useLocationPreference();
