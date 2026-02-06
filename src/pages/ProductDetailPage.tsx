@@ -8,6 +8,7 @@ import PriceCalculator from '../components/PriceCalculator';
 import { slugify } from '../utils';
 import { useGroceryData } from '../hooks';
 import { isWeightUnit, isVolumeUnit, convertPricePerUnit, formatUnit } from '../utils';
+import { useLocationPreference } from '../hooks/useLocationPreference';
 
 /**
  * ProductDetailPage component displays detailed product information and price comparison
@@ -23,7 +24,13 @@ export default function ProductDetailPage(): React.JSX.Element {
 	const [product, setProduct] = useState<Product | null>(productData || null);
 	const [filteredPrices, setFilteredPrices] = useState<PriceRecord[]>([]);
 	const [selectedYear, setSelectedYear] = useState<string>('');
-	const [selectedLocation, setSelectedLocation] = useState<string>('Canada');
+	// Location preference is global and persisted in localStorage; use a local copy so page edits don't change global
+	const { location: selectedLocation } = useLocationPreference();
+	const [selectedLocationLocal, setSelectedLocationLocal] = useState<string>(selectedLocation);
+	useEffect(() => {
+		// sync local view when global preference changes elsewhere
+		setSelectedLocationLocal(selectedLocation);
+	}, [selectedLocation]);
 	const [selectedDisplayUnit, setSelectedDisplayUnit] = useState<string>('');
 	const [displayPrice, setDisplayPrice] = useState<number | null>(null);
 	const [userPrice, setUserPrice] = useState<string>('');
@@ -49,7 +56,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 		setFilteredPrices(prices);
 
 		setSelectedDisplayUnit(product.product_unit);
-		setSelectedLocation('Canada');
+		// do not override user's chosen location; location preference is persisted globally
 		setUserPrice('');
 		setComparisonResult(null);
 		setDisplayPrice(null);
@@ -73,15 +80,15 @@ export default function ProductDetailPage(): React.JSX.Element {
 	}, [data]);
 
 	const getCurrentPrice = useCallback((): number | null => {
-		if (!selectedYear || !selectedLocation) return null;
+		if (!selectedYear || !selectedLocationLocal) return null;
 
 		const relevantPrices = filteredPrices.filter((p) => {
 			const year = p.date.substring(0, 4);
 			const matchesYear = year === selectedYear;
 			const matchesLocation =
-				selectedLocation === 'Canada'
+				selectedLocationLocal === 'Canada'
 					? p.location === 'Canada'
-					: p.location === selectedLocation;
+					: p.location === selectedLocationLocal;
 			return matchesYear && matchesLocation;
 		});
 
@@ -89,10 +96,12 @@ export default function ProductDetailPage(): React.JSX.Element {
 
 		const sum = relevantPrices.reduce((acc, p) => acc + p.price_per_unit, 0);
 		return sum / relevantPrices.length;
-	}, [selectedYear, selectedLocation, filteredPrices]);
+	}, [selectedYear, selectedLocationLocal, filteredPrices]);
 
 	useEffect(() => {
-		if (!product) return;
+		if (!product) 
+			return;
+
 		const base = getCurrentPrice();
 		if (base === null) {
 			setDisplayPrice(null);
@@ -129,12 +138,13 @@ export default function ProductDetailPage(): React.JSX.Element {
 			percentageDifference,
 			isSaving: difference < 0,
 			product: product.product_name,
-			location: selectedLocation,
+			location: selectedLocationLocal,
 			year: selectedYear,
 		});
-	}, [displayPrice, getCurrentPrice, userPrice, product, selectedLocation, selectedYear]);
+	}, [displayPrice, getCurrentPrice, userPrice, product, selectedLocationLocal, selectedYear]);
 
-	if (loading) return <LoadingSpinner message="Loading product details..." />;
+	if (loading) 
+		return <LoadingSpinner message="Loading product details..." />;
 
 	if (error) {
 		return (
@@ -331,8 +341,8 @@ export default function ProductDetailPage(): React.JSX.Element {
 								</label>
 								<select
 									id="location-select"
-									value={selectedLocation}
-									onChange={(e) => setSelectedLocation(e.target.value)}
+									value={selectedLocationLocal}
+									onChange={(e) => setSelectedLocationLocal(e.target.value)}
 									className="w-full px-4 py-3.5 text-base font-medium border-2 border-slate-300 rounded-xl bg-white hover:border-slate-400 focus:outline-none focus:border-emerald-500 transition-colors min-h-[52px]"
 								>
 									{availableLocations.map((loc) => (
@@ -381,7 +391,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 								<div className="text-right">
 									<p className="text-sm font-semibold text-slate-900">
 										<i className="fas fa-map-pin mr-1" aria-hidden="true"></i>
-										{selectedLocation}
+										{selectedLocationLocal}
 									</p>
 									<p className="text-sm text-slate-600">{selectedYear}</p>
 								</div>
@@ -390,7 +400,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 					)}
 
 					{/* No Data Message */}
-					{!currentPrice && selectedYear && selectedLocation && (
+					{!currentPrice && selectedYear && selectedLocationLocal && (
 						<div className="p-6 sm:p-8 bg-yellow-50 border-t border-yellow-200">
 							<div className="flex items-center gap-3">
 								<i className="fas fa-exclamation-circle text-2xl text-yellow-600" aria-hidden="true"></i>

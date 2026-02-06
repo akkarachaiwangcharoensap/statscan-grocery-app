@@ -43,3 +43,39 @@ export function capitalizeWords(text: string): string {
 		})
 		.join(' ');
 }
+
+/**
+ * Abbreviate a Canadian province / location name for compact UI display
+ * Falls back to the first three uppercase letters for unknown values
+ */
+export function abbreviateProvince(name: string): string {
+	if (!name) return '';
+	const lookup: Record<string, string> = {
+		'Canada': 'CA',
+		'Newfoundland And Labrador': 'NL',
+		'Prince Edward Island': 'PE',
+		'Nova Scotia': 'NS',
+		'New Brunswick': 'NB',
+		'Quebec': 'QC',
+		'Ontario': 'ON',
+		'Manitoba': 'MB',
+		'Saskatchewan': 'SK',
+		'Alberta': 'AB',
+		'British Columbia': 'BC',
+		'Yukon': 'YT',
+		'Northwest Territories': 'NT',
+		'Nunavut': 'NU'
+	};
+
+	// direct match
+	if (lookup[name]) return lookup[name];
+
+	// partial matches for entries that include city, e.g. "Whitehorse, Yukon"
+	if (name.includes('Yukon')) return 'YT';
+	if (name.includes('Northwest')) return 'NT';
+	if (name.includes('Whitehorse')) return 'YT';
+	if (name.includes('Yellowknife')) return 'NT';
+	
+	// fallback: short uppercased form
+	return name.slice(0, 3).toUpperCase();
+}

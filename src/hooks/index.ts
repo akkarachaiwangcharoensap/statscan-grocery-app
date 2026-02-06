@@ -3,3 +3,4 @@
  */
 
 export { useGroceryData } from './useGroceryData';
+export { useLocationPreference } from './useLocationPreference';

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Category } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ProductSearch from '../components/ProductSearch';
+import LocationSelector from '../components/LocationSelector';
 import { useGroceryData } from '../hooks';
 
 const categoryIcons: Record<string, { icon: string; colorBg: string; colorHover: string; colorIcon: string; iconColor: string }> = {
@@ -94,17 +95,21 @@ export default function ProductsPage(): React.JSX.Element {
 		<div className="min-h-screen bg-white pb-12">
 			<div className="max-w-6xl mx-auto px-4">
 				{/* Header with back button */}
-				<div className="pt-8 pb-6 sm:pt-12 sm:pb-8">
-					<Link
-						to="/"
-						className="inline-flex items-center gap-2 px-4 py-2.5 text-slate-700 hover:text-slate-900 active:text-slate-900 transition-colors rounded-xl hover:bg-slate-50 active:bg-slate-100 min-h-[44px]"
-					>
-						<i className="fas fa-arrow-left" aria-hidden="true"></i>
-						<span className="font-medium">Home</span>
-					</Link>
+			<div className="pt-8 pb-6 sm:pt-12 sm:pb-8 flex items-center justify-between">
+				<Link
+					to="/"
+					className="inline-flex items-center gap-2 px-4 py-2.5 text-slate-700 hover:text-slate-900 active:text-slate-900 transition-colors rounded-xl hover:bg-slate-50 active:bg-slate-100 min-h-[44px]"
+				>
+					<i className="fas fa-arrow-left" aria-hidden="true"></i>
+					<span className="font-medium">Home</span>
+				</Link>
+				{/* location selector */}
+				<div className="flex items-center">
+					<LocationSelector />
 				</div>
+			</div>
 
-				{/* Title Section */}
+			{/* Title Section */}
 				<div className="mb-8 sm:mb-10">
 					<h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-slate-900 mb-4 tracking-tight">
 						Product Categories
