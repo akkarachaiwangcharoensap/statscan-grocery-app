@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useGroceryData } from '../hooks';
 import { useLocationPreference } from '../hooks/useLocationPreference';
 import { abbreviateProvince } from '../utils/stringUtils';
 
-export default function LocationSelector(): React.JSX.Element | null {
+export default function LocationSelector(): React.ReactElement | null {
     const { data, loading } = useGroceryData();
     const { location, setLocation } = useLocationPreference();
     const [isOpen, setIsOpen] = useState(false);

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import type React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { PriceRecord, ComparisonResult, Product } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -15,7 +16,7 @@ import { useLocationPreference } from '../hooks/useLocationPreference';
  * Apple-inspired flat design with Font Awesome icons
  * @returns The product detail page component
  */
-export default function ProductDetailPage(): React.JSX.Element {
+export default function ProductDetailPage(): React.ReactElement {
 	const { category, product: productSlug } = useParams<{ category: string; product: string }>();
 	const location = useLocation();
 	const productData = location.state?.product as Product | undefined;
@@ -230,25 +231,7 @@ export default function ProductDetailPage(): React.JSX.Element {
 										type="button"
 										aria-label="Show prices per kilogram"
 										aria-pressed={(selectedDisplayUnit || product.product_unit).toLowerCase() === 'kg'}
-										onClick={() => {
-											const newUnit = 'kg';
-											try {
-												const base = getCurrentPrice();
-												if (base !== null) {
-													const converted = convertPricePerUnit(base, product.product_unit, newUnit);
-													setSelectedDisplayUnit(newUnit);
-													setDisplayPrice(converted);
-												} else {
-													setSelectedDisplayUnit(newUnit);
-												}
-											} catch (err) {
-												console.error('Conversion error', err);
-											}
-										}}
-										className={`px-5 py-3 text-sm font-bold min-w-[60px] transition-colors hover:cursor-pointer ${(selectedDisplayUnit || product.product_unit).toLowerCase() === 'kg'
-												? 'bg-emerald-500 text-white'
-												: 'bg-slate-200 text-slate-700 hover:bg-slate-300'
-											}`}
+								onClick={() => handleUnitChange('kg')}
 									>
 										KG
 									</button>

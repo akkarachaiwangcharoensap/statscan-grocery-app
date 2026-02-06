@@ -1,5 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
+import type React from 'react';
 import LocationSelector from './LocationSelector';
 
 interface ProductHeaderProps {
@@ -13,7 +13,7 @@ interface ProductHeaderProps {
  * @param props - Component props
  * @returns The product header component
  */
-export default function ProductHeader({ categorySlug, categoryName }: ProductHeaderProps): React.JSX.Element {
+export default function ProductHeader({ categorySlug, categoryName }: ProductHeaderProps): React.ReactElement {
 	const backPath = categorySlug ? `/products` : '/products';
 	const backText = categorySlug ? 'Categories' : categoryName;
 

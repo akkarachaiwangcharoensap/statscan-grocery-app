@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type React from 'react';
 import { Link } from 'react-router-dom';
 import { Category } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -33,7 +34,7 @@ const categoryIcons: Record<string, { icon: string; colorBg: string; colorHover:
  * ProductsPage component displays all product categories with their unique product counts
  * @returns The products page component
  */
-export default function ProductsPage(): React.JSX.Element {
+export default function ProductsPage(): React.ReactElement {
 	const { data, loading, error } = useGroceryData();
 
 	/**

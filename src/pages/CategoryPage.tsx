@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import type React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Product } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -12,7 +13,7 @@ import { useGroceryData } from '../hooks';
  * Apple-inspired flat design with Font Awesome icons
  * @returns The category page component
  */
-export default function CategoryPage(): React.JSX.Element {
+export default function CategoryPage(): React.ReactElement {
 	const { category } = useParams<{ category: string }>();
 	const { data, loading, error } = useGroceryData();
 	const [products, setProducts] = useState<Product[]>([]);

@@ -1,12 +1,12 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
+import type React from 'react';
 
 /**
  * HomePage component displays the landing page with feature highlights
  * Apple-inspired flat design with Font Awesome icons
  * @returns The home page component
  */
-export default function HomePage(): React.JSX.Element {
+export default function HomePage(): React.ReactElement {
 	return (
 		<div className="min-h-screen bg-white">
 			{/* Hero Section */}

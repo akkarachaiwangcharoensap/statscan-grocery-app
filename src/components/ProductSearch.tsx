@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import type React from 'react';
 import { Product } from '../types';
 import { slugify } from '../utils';
 
@@ -11,7 +12,7 @@ interface ProductSearchProps {
  * ProductSearch component with typeahead suggestions and keyboard navigation
  * Apple-inspired flat design with Font Awesome icons
  */
-export default function ProductSearch({ products = [] }: ProductSearchProps): React.JSX.Element {
+export default function ProductSearch({ products = [], onNavigate }: ProductSearchProps): React.ReactElement {
 	const [query, setQuery] = useState<string>('');
 	const [results, setResults] = useState<Product[]>([]);
 	const [open, setOpen] = useState<boolean>(false);
@@ -78,6 +79,12 @@ export default function ProductSearch({ products = [] }: ProductSearchProps): Re
 		inputRef.current?.blur();
 
 		const path = `${import.meta.env.BASE_URL || ''}products/${p.product_category}/${slugify(p.product_name)}`;
+
+		// Prefer programmatic navigation if provided (useful in tests), otherwise fall back to history API
+		if (onNavigate) {
+			onNavigate(path);
+			return;
+		}
 
 		try {
 			window.history.pushState({}, '', path);

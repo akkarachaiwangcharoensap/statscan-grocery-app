@@ -1,8 +1,8 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
+import type React from 'react';
 import LocationSelector from './LocationSelector';
 
-export default function TopBar(): React.JSX.Element {
+export default function TopBar(): React.ReactElement {
 	return (
 		<header className="w-full flex items-center justify-between py-3 px-4">
 			<Link to="/" className="inline-flex items-center gap-3">

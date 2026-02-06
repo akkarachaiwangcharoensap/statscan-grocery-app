@@ -1,4 +1,5 @@
 import React from 'react';
+import type { ReactElement } from 'react';
 import { ComparisonResult } from '../types';
 import { formatPrice } from '../utils';
 
@@ -27,7 +28,7 @@ export default function PriceCalculator({
     onUserPriceChange,
     onCalculate,
     comparisonResult = null,
-}: PriceCalculatorProps): React.JSX.Element {
+}: PriceCalculatorProps): ReactElement {
     const [inputMode, setInputMode] = React.useState<InputMode>('per-unit');
     const [productPrice, setProductPrice] = React.useState<string>('');
     const [productVolume, setProductVolume] = React.useState<string>('');

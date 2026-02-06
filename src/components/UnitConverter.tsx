@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import type React from 'react';
 import { isWeightUnit, isVolumeUnit, convertPricePerUnit, formatUnit } from '../utils';
 
 export interface UnitConverterProps {
@@ -41,7 +42,7 @@ export default function UnitConverter({
 	baseUnit,
 	basePrice,
 	onUnitChange,
-}: UnitConverterProps): React.JSX.Element {
+}: UnitConverterProps): React.ReactElement {
 	const [selectedUnit, setSelectedUnit] = useState<string>(baseUnit);
 	const didMountRef = useRef(false);
 

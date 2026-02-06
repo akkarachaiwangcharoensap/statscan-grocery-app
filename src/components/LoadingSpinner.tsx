@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 interface LoadingSpinnerProps {
 	message?: string;
@@ -10,7 +10,7 @@ interface LoadingSpinnerProps {
  * @param props - Component props
  * @returns The loading spinner component
  */
-export default function LoadingSpinner({ message = 'Loading...' }: LoadingSpinnerProps): React.JSX.Element {
+export default function LoadingSpinner({ message = 'Loading...' }: LoadingSpinnerProps): React.ReactElement {
 	return (
 		<div className="min-h-screen bg-white flex items-center justify-center px-4">
 			<div className="text-center">
