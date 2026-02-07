@@ -5,6 +5,7 @@ import { Category } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ProductSearch from '../components/ProductSearch';
 import LocationSelector from '../components/LocationSelector';
+import { formatCategoryName } from '../utils';
 import { useGroceryData } from '../hooks';
 
 const categoryIcons: Record<string, { icon: string; colorBg: string; colorHover: string; colorIcon: string; iconColor: string }> = {
@@ -141,8 +142,8 @@ export default function ProductsPage(): React.ReactElement {
 
 								{/* Content */}
 								<div className="flex-1 pr-20">
-									<h3 className="text-2xl sm:text-3xl font-semibold text-slate-900 capitalize mb-2 group-hover:text-emerald-600 transition-colors">
-										{category.name}
+									<h3 className="text-2xl sm:text-3xl font-semibold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
+										{formatCategoryName(category.name)}
 									</h3>
 									<p className="text-base sm:text-lg text-slate-600 font-medium">
 										{category.count} {category.count === 1 ? 'product' : 'products'}

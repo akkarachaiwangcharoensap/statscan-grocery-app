@@ -5,7 +5,7 @@ import { Product } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ProductHeader from '../components/ProductHeader';
 import ProductSearch from '../components/ProductSearch';
-import { slugify } from '../utils';
+import { slugify, formatCategoryName } from '../utils';
 import { useGroceryData } from '../hooks';
 
 /**
@@ -54,11 +54,11 @@ export default function CategoryPage(): React.ReactElement {
 
 				{/* Title Section */}
 				<div className="mb-8 sm:mb-10">
-					<h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-slate-900 mb-4 capitalize tracking-tight">
-						{category}
+					<h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-slate-900 mb-4 tracking-tight">
+						{formatCategoryName(category || '')}
 					</h1>
 					<p className="text-xl sm:text-2xl text-slate-600 leading-relaxed">
-						Browse all {category} products and compare prices
+						Browse all {formatCategoryName(category || '')} products and compare prices
 					</p>
 				</div>
 

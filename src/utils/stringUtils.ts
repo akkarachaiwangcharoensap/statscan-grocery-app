@@ -45,6 +45,21 @@ export function capitalizeWords(text: string): string {
 }
 
 /**
+ * Format a product category name for display
+ * Capitalizes words and removes underscores
+ * @param category - The category name to format
+ * @returns The formatted category name
+ */
+export function formatCategoryName(category: string): string {
+	if (!category) return '';
+	return category
+		.replace(/_/g, ' ') // Replace underscores with spaces
+		.split(' ')
+		.map((word) => capitalize(word.toLowerCase()))
+		.join(' ');
+}
+
+/**
  * Abbreviate a Canadian province / location name for compact UI display
  * Falls back to the first three uppercase letters for unknown values
  */
