@@ -58,43 +58,59 @@ class StatCanJSONProcessor:
     # Category keywords for classification
     # Note: Order matters - more specific categories should come first
     CATEGORY_KEYWORDS = {
-        # Meats - check specific meat types first
-        "pork": ["pork", "bacon", "ham", "sausage"],
-        "poultry": ["chicken", "turkey", "duck"],
-        "beef": [
-            "beef", "sirloin", "steak", "ground beef"
-        ],  # Removed "rib" and "round" to avoid false matches
-        "fish": ["salmon", "tuna", "cod", "haddock", "fish"],
-        "seafood": [
-            "shrimp", "scallop", "lobster", "crab", "seafood"
-        ],
-        # Produce
-        "fruit": [
-            "apple", "banana", "orange", "grape", "berry",
-            "strawberr", "blueberr", "peach", "pear", "melon"
-        ],
         "vegetable": [
-            "potato", "onion", "carrot", "lettuce", "broccoli",
-            "tomato", "pepper", "celery", "cucumber"
+            "potato", "sweet potato", "tomato", "carrot", "onion",
+            "celery", "cucumber", "iceberg lettuce", "romaine lettuce",
+            "broccoli", "bell pepper", "lemon", "lime", "avocado",
+            "cabbage", "mushroom", "squash", "green salad",
         ],
-        # Dairy and eggs
-        "dairy": [
-            "milk", "cheese", "butter", "cream",
-            "yogurt", "yoghurt"
+        "fruit": [
+            "cantaloupe", "apple", "orange", "banana", "pear",
+            "grape", "strawberry",
         ],
-        "eggs": ["egg"],
-        # Pantry staples
-        "bread": ["bread", "bun", "roll"],
-        "pasta": ["pasta", "spaghetti", "macaroni"],
-        "rice": ["rice"],
-        "cereal": ["cereal", "oats"],
-        "oil": ["oil", "margarine"],
-        "sugar": ["sugar"],
-        # Beverages
-        "coffee": ["coffee"],
-        "tea": ["tea"],
-        "juice": ["juice"],
-        "soft_drinks": ["soft drink", "pop", "soda"],
+        "dairy_and_egg": [
+            "cow milk", "soy milk", "nut milk", "whole cream", "butter",
+            "block cheese", "yogurt", "egg",
+        ],
+        "pork": ["pork loin", "pork", "bacon"],
+        "beef": [
+            "beef stewing", "beef striploin", "beef top sirloin",
+            "beef rib", "ground beef", "beef",
+        ],
+        "poultry": [
+            "whole chicken", "chicken breast", "chicken thigh",
+            "chicken drumsticks", "chicken",
+        ],
+        "plant_based_protein": ["tofu"],
+        "carbs": [
+            "dry pasta", "fresh pasta", "pasta", "brown rice", "white rice",
+            "white bread", "flatbread", "pita", "crackers", "crisp bread",
+        ],
+        "seafood": ["salmon", "shrimp", "tuna"],
+        "nuts_and_dry_beans": [
+            "peanut", "almond", "sunflower seed", "dried lentils",
+            "dry bean", "legume", "bean",
+        ],
+        "seasoning": ["ketchup", "mayonnaise", "salad dressing", "white sugar", "brown sugar"],
+        "baby_items": ["baby food", "infant formula"],
+        "frozen_food": [
+            "frozen french fries", "frozen broccoli", "frozen green bean",
+            "frozen corn", "frozen mixed vegetable", "frozen pea",
+            "frozen pizza", "frozen spinach", "frozen strawberry",
+        ],
+        "deli": ["wiener", "meatless burger", "hummus", "salsa"],
+        "canned_food": [
+            "canned tomato", "canned baked bean", "canned soup",
+            "canned bean", "canned lentil", "canned corn",
+            "canned peach", "canned pear", "canned salmon", "canned tuna",
+        ],
+        "snacks": ["cookie", "cookies", "sweet biscuit", "biscuit"],
+        "baking_ingredients": ["wheat flour", "wheet flour", "flour"],
+        "personal_care": ["deodorant", "toothpaste", "tooth paste", "shampoo", "conditioner"],
+        "household_supply": ["laundry detergent"],
+        "drink": ["apple juice", "roasted coffee", "ground coffee", "coffee", "tea"],
+        "pantry_item": ["peanut butter", "pasta sauce", "cereal"],
+        "oil": ["margarine", "vegetable oil", "canola oil", "olive oil"],
     }
 
     def __init__(self) -> None:
@@ -360,8 +376,8 @@ class StatCanJSONProcessor:
             # kg or kilogram
             return value, "kg"
 
-        # No weight/unit found, treat as single unit
-        return 1.0, "kg"
+        # No weight/unit found, treat as single unit (each)
+        return 1.0, "unit"
 
     def _clean_product_name(self, text: str) -> str:
         """Clean product name by removing weights, units, and extra text.
@@ -398,22 +414,18 @@ class StatCanJSONProcessor:
         return text.strip().title()
 
     def _infer_category(self, name: str) -> str:
-        """Infer product category from product name.
+        """Infer product category from product name using word-boundary matching.
 
-        Performs keyword matching against category keywords.
-        If no match is found, defaults to "other".
-
-        Args:
-            name: Product name to categorize
-
-        Returns:
-            Category name (one of the CATEGORY_KEYWORDS keys, or "other")
+        Performs keyword matching against category keywords. Returns the first matching
+        category or "other" if no keyword matches.
         """
         name_lower = name.lower()
 
         for category, keywords in self.CATEGORY_KEYWORDS.items():
-            if any(keyword in name_lower for keyword in keywords):
-                return category
+            for keyword in keywords:
+                pattern = rf"\b{re.escape(keyword)}\b"
+                if re.search(pattern, name_lower):
+                    return category
 
         return "other"
 
