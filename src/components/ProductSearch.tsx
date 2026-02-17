@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import type React from 'react';
 import { Product } from '../types';
-import { slugify } from '../utils';
+import { slugify, formatCategoryName } from '../utils';
 
 interface ProductSearchProps {
 	products?: Product[];
@@ -19,15 +19,19 @@ export default function ProductSearch({ products = [] }: ProductSearchProps): Re
 	const [isFocused, setIsFocused] = useState<boolean>(false);
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const listRef = useRef<HTMLUListElement | null>(null);
+	const prevQueryRef = useRef<string>('');
 
 	// debounce search
 	useEffect(() => {
 		const handle = setTimeout(() => {
 			const q = query.trim().toLowerCase();
+			const queryChanged = prevQueryRef.current !== q;
+
 			if (!q) {
 				setResults([]);
 				setOpen(false);
 				setActiveIndex(-1);
+				prevQueryRef.current = q;
 				return;
 			}
 
@@ -39,7 +43,11 @@ export default function ProductSearch({ products = [] }: ProductSearchProps): Re
 			// Show dropdown area whenever there is a non-empty query. The render
 			// will decide whether to show the result list or a "no results" message
 			setOpen(!!q);
-			setActiveIndex(-1);
+			// Only reset activeIndex if the query actually changed, not if just products prop changed
+			if (queryChanged) {
+				setActiveIndex(-1);
+			}
+			prevQueryRef.current = q;
 		}, 180);
 
 		return () => clearTimeout(handle);
@@ -203,7 +211,7 @@ export default function ProductSearch({ products = [] }: ProductSearchProps): Re
 									</div>
 									<div className="flex items-center gap-2 text-xs text-slate-500">
 										<span className="capitalize bg-slate-100 px-2 py-0.5 rounded-full font-medium">
-											{p.product_category}
+											{formatCategoryName(p.product_category)}
 										</span>
 										<span className="text-slate-300">•</span>
 										<span className="uppercase font-medium">{p.product_unit}</span>

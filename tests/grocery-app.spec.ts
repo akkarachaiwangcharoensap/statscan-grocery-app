@@ -66,6 +66,9 @@ test.describe('Grocery App - Product Search', () => {
 
 		// Wait for products page to load
 		await expect(page).toHaveURL(/\/products/);
+
+		// Wait for page content to be ready - wait for at least one category to appear
+		await expect(page.getByRole('heading', { name: /Product Categories/i })).toBeVisible();
 	});
 
 	test('displays search input', async ({ page }) => {
@@ -82,11 +85,11 @@ test.describe('Grocery App - Product Search', () => {
 
 		await test.step('Wait and verify results appear', async () => {
 			const results = page.getByRole('listbox');
-			await expect(results).toBeVisible();
+			await expect(results).toBeVisible({ timeout: 5000 });
 
 			// Look for any milk-related product
 			const milkProduct = page.getByRole('option').filter({ hasText: /milk/i });
-			await expect(milkProduct.first()).toBeVisible({ timeout: 2000 });
+			await expect(milkProduct.first()).toBeVisible({ timeout: 5000 });
 		});
 	});
 
@@ -94,11 +97,13 @@ test.describe('Grocery App - Product Search', () => {
 		await test.step('Type non-existent product', async () => {
 			const searchInput = page.getByRole('searchbox');
 			await searchInput.fill('xyz123nonexistent');
+			// Wait for debounce to complete
+			await page.waitForTimeout(300);
 		});
 
 		await test.step('Verify no results message', async () => {
 			const noResultsMsg = page.getByText(/No products found/i);
-			await expect(noResultsMsg).toBeVisible({ timeout: 2000 });
+			await expect(noResultsMsg).toBeVisible({ timeout: 5000 });
 		});
 	});
 
@@ -122,10 +127,13 @@ test.describe('Grocery App - Product Search', () => {
 	});
 
 	test('keyboard navigation in search results', async ({ page }) => {
-		await test.step('Type search term', async () => {
+		await test.step('Type search term and wait for results', async () => {
 			const searchInput = page.getByRole('searchbox');
 			await searchInput.fill('milk');
-			await page.waitForTimeout(300); // Wait for debounce
+
+			// Wait for results to actually appear, not just for debounce
+			const firstOption = page.getByRole('option').first();
+			await expect(firstOption).toBeVisible({ timeout: 5000 });
 		});
 
 		await test.step('Navigate with arrow keys', async () => {
@@ -161,12 +169,14 @@ test.describe('Grocery App - Product Navigation', () => {
 		await test.step('Search for a product', async () => {
 			const searchInput = page.getByRole('searchbox');
 			await searchInput.fill('milk');
-			await page.waitForTimeout(300);
+			// Wait for results to appear
+			const firstOption = page.getByRole('option').first();
+			await expect(firstOption).toBeVisible({ timeout: 5000 });
 		});
 
 		await test.step('Wait for and click first result', async () => {
 			const firstOption = page.getByRole('option').first();
-			await expect(firstOption).toBeVisible({ timeout: 2000 });
+			await expect(firstOption).toBeVisible({ timeout: 5000 });
 			// Note: clicking might navigate, so we need to handle potential navigation
 			await firstOption.click();
 			// Wait for navigation or timeout

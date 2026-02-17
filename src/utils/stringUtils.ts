@@ -90,7 +90,7 @@ export function abbreviateProvince(name: string): string {
 	if (name.includes('Northwest')) return 'NT';
 	if (name.includes('Whitehorse')) return 'YT';
 	if (name.includes('Yellowknife')) return 'NT';
-	
+
 	// fallback: short uppercased form
 	return name.slice(0, 3).toUpperCase();
 }
