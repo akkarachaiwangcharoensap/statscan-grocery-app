@@ -59,18 +59,18 @@ class StatCanJSONProcessor:
     # Note: Order matters - more specific categories should come first
     CATEGORY_KEYWORDS = {
         "vegetable": [
-            "potato", "sweet potato", "tomato", "carrot", "onion",
+            "potatoes", "sweet potatoes", "tomatoes", "carrots", "onions",
             "celery", "cucumber", "iceberg lettuce", "romaine lettuce",
-            "broccoli", "bell pepper", "lemon", "lime", "avocado",
-            "cabbage", "mushroom", "squash", "green salad",
+            "broccoli", "bell pepper", "peppers", "lemons", "limes", "avocado",
+            "cabbage", "mushrooms", "squash", "salad greens",
         ],
         "fruit": [
-            "cantaloupe", "apple", "orange", "banana", "pear",
-            "grape", "strawberry",
+            "cantaloupe", "apples", "oranges", "bananas", "pears",
+            "grapes", "strawberries",
         ],
         "dairy_and_egg": [
-            "cow milk", "soy milk", "nut milk", "whole cream", "butter",
-            "block cheese", "yogurt", "egg",
+            "milk", "cow milk", "soy milk", "nut milk", "cream", "butter",
+            "block cheese", "yogurt", "eggs",
         ],
         "pork": ["pork loin", "pork", "bacon"],
         "beef": [
@@ -88,20 +88,20 @@ class StatCanJSONProcessor:
         ],
         "seafood": ["salmon", "shrimp", "tuna"],
         "nuts_and_dry_beans": [
-            "peanut", "almond", "sunflower seed", "dried lentils",
-            "dry bean", "legume", "bean",
+            "peanuts", "almonds", "sunflower seeds", "dried lentils",
+            "dry beans and legumes", "dry bean", "legume", "bean",
         ],
         "seasoning": ["ketchup", "mayonnaise", "salad dressing", "white sugar", "brown sugar"],
         "baby_items": ["baby food", "infant formula"],
         "frozen_food": [
-            "frozen french fries", "frozen broccoli", "frozen green bean",
-            "frozen corn", "frozen mixed vegetable", "frozen pea",
-            "frozen pizza", "frozen spinach", "frozen strawberry",
+            "frozen french fries potatoes", "frozen broccoli", "frozen green beans",
+            "frozen corn", "frozen mixed vegetables", "frozen peas",
+            "frozen pizza", "frozen spinach", "frozen strawberries",
         ],
-        "deli": ["wiener", "meatless burger", "hummus", "salsa"],
+        "deli": ["wieners", "meatless burgers", "hummus", "salsa"],
         "canned_food": [
-            "canned tomato", "canned baked bean", "canned soup",
-            "canned bean", "canned lentil", "canned corn",
+            "canned tomatoes", "canned baked beans", "canned soup",
+            "canned beans and lentils", "canned beans", "canned lentils", "canned corn",
             "canned peach", "canned pear", "canned salmon", "canned tuna",
         ],
         "snacks": ["cookie", "cookies", "sweet biscuit", "biscuit"],
